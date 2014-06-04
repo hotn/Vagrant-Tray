@@ -70,11 +70,14 @@ namespace VagrantTray
                 Bitmap status = null;
                 switch (vagrantInstance.State)
                 {
+                    case "running":
+                        status = Icon.FromHandle(Resources.Green.Handle).ToBitmap();
+                        break;
                     case "saved":
                         status = Icon.FromHandle(Resources.Yellow.Handle).ToBitmap();
                         break;
-                    case "running":
-                        status = Icon.FromHandle(Resources.Green.Handle).ToBitmap();
+                    case "poweroff":
+                        status = Icon.FromHandle(Resources.Red.Handle).ToBitmap();
                         break;
                 }
 
