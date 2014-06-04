@@ -107,6 +107,15 @@
   <ItemGroup>
     <None Include="Resources\Suspend.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Green.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Red.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Yellow.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

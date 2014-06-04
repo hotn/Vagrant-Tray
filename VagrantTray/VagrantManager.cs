@@ -19,6 +19,24 @@ namespace VagrantTray
 
         private void Init()
         {
+            
+        }
+
+        public List<VagrantInstance> GetInstances()
+        {
+            _instances = new List<VagrantInstance>();
+            GetGlobalStatus();
+            return _instances;
+        }
+
+        private void CreateProcess()
+        {
+            if (_process != null)
+            {
+                _process.Close();
+                _process.Dispose();
+            }
+
             _process = new Process();
             var startInfo = new ProcessStartInfo
             {
@@ -32,15 +50,10 @@ namespace VagrantTray
             _process.EnableRaisingEvents = true;
         }
 
-        public List<VagrantInstance> GetInstances()
-        {
-            _instances = new List<VagrantInstance>();
-            GetGlobalStatus();
-            return _instances;
-        }
-
         private void GetGlobalStatus()
         {
+            CreateProcess();
+
             _process.StartInfo.Arguments = "global-status";
 
             _process.OutputDataReceived += ProcessOnGlobalStatusOutputDataReceived;
@@ -49,7 +62,11 @@ namespace VagrantTray
             
 
             _process.Start();
-            _process.BeginOutputReadLine();
+            try
+            {
+                _process.BeginOutputReadLine();
+            }
+            catch (Exception) { }
             _process.WaitForExit();
         }
 
@@ -68,13 +85,14 @@ namespace VagrantTray
             foreach (var line in instanceLines)
             {
                 var data = line.Split(' ');
+                var datalist = new List<string>(data).Where(d => !d.Trim().Equals(String.Empty)).ToList();
                 _instances.Add(new VagrantInstance
                 {
-                    Id = data[0],
-                    Name = data[1],
-                    Provider = data[2],
-                    State = data[3],
-                    Directory = data[4]
+                    Id = datalist.ElementAt(0),
+                    Name = datalist.ElementAt(1),
+                    Provider = datalist.ElementAt(2),
+                    State = datalist.ElementAt(3),
+                    Directory = datalist.ElementAt(4)
                 });
             }
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using VagrantTray.Properties;
 
@@ -23,8 +25,6 @@ namespace VagrantTray
         {
             // Create a simple tray menu with only one item.
             trayMenu = new ContextMenuStrip();
-            trayMenu.Items.Add("Exit", null, OnExit);
-            trayMenu.Items.Add("List", null, OnList);
 
             // Create a tray icon. In this example we use a
             // standard system icon for simplicity, but you
@@ -36,6 +36,15 @@ namespace VagrantTray
             // Add menu to tray icon and show it.
             trayIcon.ContextMenuStrip = trayMenu;
             trayIcon.Visible = true;
+
+            RebuildList();
+        }
+
+        private void AddDefaultMenuItems()
+        {
+            trayMenu.Items.Add(new ToolStripSeparator());
+            trayMenu.Items.Add("Refresh List", null, (s, e) => RebuildList());
+            trayMenu.Items.Add("Exit", null, OnExit);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -51,18 +60,28 @@ namespace VagrantTray
             Application.Exit();
         }
 
-        private void OnList(object sender, EventArgs e)
+        private void RebuildList()
         {
-            while (trayMenu.Items.Count > 2)
-            {
-                trayMenu.Items.RemoveAt(2);
-            }
+            trayMenu.Items.Clear();
 
             var instances = _manager.GetInstances();
             foreach (var vagrantInstance in instances)
             {
-                trayMenu.Items.Add(new ToolStripMenuItem(vagrantInstance.Id, null, VagrantMenuItems));
+                Bitmap status = null;
+                switch (vagrantInstance.State)
+                {
+                    case "saved":
+                        status = Icon.FromHandle(Resources.Yellow.Handle).ToBitmap();
+                        break;
+                    case "running":
+                        status = Icon.FromHandle(Resources.Green.Handle).ToBitmap();
+                        break;
+                }
+                
+                trayMenu.Items.Add(new ToolStripMenuItem(vagrantInstance.Id, status, VagrantMenuItems));
             }
+
+            AddDefaultMenuItems();
         }
 
         private ToolStripItem[] VagrantMenuItems
