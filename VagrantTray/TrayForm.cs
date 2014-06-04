@@ -77,8 +77,19 @@ namespace VagrantTray
                         status = Icon.FromHandle(Resources.Green.Handle).ToBitmap();
                         break;
                 }
-                
-                trayMenu.Items.Add(new ToolStripMenuItem(vagrantInstance.Id, status, VagrantMenuItems));
+
+                var submenu = new ToolStripMenuItem(vagrantInstance.Id, status);
+                submenu.DropDownItems.Add(new ToolStripMenuItem("Name: " + vagrantInstance.Name) { Enabled = false });
+                submenu.DropDownItems.Add(new ToolStripMenuItem("Provider: " + vagrantInstance.Provider) { Enabled = false });
+                submenu.DropDownItems.Add(new ToolStripMenuItem("State: " + vagrantInstance.State) { Enabled = false });
+                submenu.DropDownItems.Add(new ToolStripMenuItem("Directory: " + vagrantInstance.Directory) { Enabled = false });
+                submenu.DropDownItems.Add(new ToolStripSeparator());
+                foreach (var vagrantMenuItem in VagrantMenuItems)
+                {
+                    submenu.DropDownItems.Add(vagrantMenuItem);
+                }
+
+                trayMenu.Items.Add(submenu);
             }
 
             AddDefaultMenuItems();
