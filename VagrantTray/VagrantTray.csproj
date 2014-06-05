@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VagrantCommand.cs" />
     <Compile Include="VagrantInstance.cs" />
     <Compile Include="VagrantManager.cs" />
     <Compile Include="TrayForm.cs">

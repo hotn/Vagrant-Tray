@@ -93,6 +93,16 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        public static System.Drawing.Icon Halt {
+            get {
+                object obj = ResourceManager.GetObject("Halt", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         public static System.Drawing.Icon Provision {
             get {
                 object obj = ResourceManager.GetObject("Provision", resourceCulture);
@@ -133,9 +143,9 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Stop {
+        public static System.Drawing.Icon Suspend {
             get {
-                object obj = ResourceManager.GetObject("Stop", resourceCulture);
+                object obj = ResourceManager.GetObject("Suspend", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -143,9 +153,9 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Suspend {
+        public static System.Drawing.Icon Up {
             get {
-                object obj = ResourceManager.GetObject("Suspend", resourceCulture);
+                object obj = ResourceManager.GetObject("Up", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

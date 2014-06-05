@@ -22,13 +22,6 @@ namespace VagrantTray
             
         }
 
-        public List<VagrantInstance> GetInstances()
-        {
-            _instances = new List<VagrantInstance>();
-            GetGlobalStatus();
-            return _instances;
-        }
-
         private void CreateProcess()
         {
             if (_process != null)
@@ -102,6 +95,42 @@ namespace VagrantTray
         private void ProcessOnErrorDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
             Console.WriteLine("Error: " + dataReceivedEventArgs.Data);
+        }
+
+        public List<VagrantInstance> GetInstances()
+        {
+            _instances = new List<VagrantInstance>();
+            GetGlobalStatus();
+            return _instances;
+        }
+
+        private void RunInstanceCommand(string args)
+        {
+            CreateProcess();
+
+            _process.StartInfo.Arguments = args;
+
+            _process.OutputDataReceived += (sender, eventArgs) => Console.WriteLine(eventArgs.Data);
+            _process.ErrorDataReceived += ProcessOnErrorDataReceived;
+            _process.Exited += (sender, eventArgs) => Console.WriteLine("Command complete");
+
+
+            _process.Start();
+            try
+            {
+                _process.BeginOutputReadLine();
+            }
+            catch (Exception) { }
+            _process.WaitForExit();
+        }
+
+        public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantCommand command)
+        {
+            return () =>
+            {
+                Console.WriteLine("Command for " + command + " " + instance.Id);
+                RunInstanceCommand(command.ToString().ToLower() + " " + instance.Id);
+            };
         }
     }
 }

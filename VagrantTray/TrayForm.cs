@@ -30,8 +30,9 @@ namespace VagrantTray
             // standard system icon for simplicity, but you
             // can of course use your own custom icon too.
             trayIcon = new NotifyIcon();
-            trayIcon.Text = "MyTrayApp";
-            trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
+            trayIcon.Text = "Vagrant Tray";
+            //trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
+            trayIcon.Icon = Icon.FromHandle(Resources.Vagrant.GetHicon());
 
             // Add menu to tray icon and show it.
             trayIcon.ContextMenuStrip = trayMenu;
@@ -87,7 +88,7 @@ namespace VagrantTray
                 submenu.DropDownItems.Add(new ToolStripMenuItem("State: " + vagrantInstance.State) { Enabled = false });
                 submenu.DropDownItems.Add(new ToolStripMenuItem("Directory: " + vagrantInstance.Directory) { Enabled = false });
                 submenu.DropDownItems.Add(new ToolStripSeparator());
-                foreach (var vagrantMenuItem in VagrantMenuItems)
+                foreach (var vagrantMenuItem in GenerateMenuItemsForVagrantInstance(vagrantInstance))
                 {
                     submenu.DropDownItems.Add(vagrantMenuItem);
                 }
@@ -98,32 +99,17 @@ namespace VagrantTray
             AddDefaultMenuItems();
         }
 
-        private ToolStripItem[] VagrantMenuItems
+        private IEnumerable<ToolStripItem> GenerateMenuItemsForVagrantInstance(VagrantInstance instance)
         {
-            get
-            {
-                return new ToolStripItem[]
-                {
-                    new ToolStripMenuItem("Up", Icon.FromHandle(Resources.Up.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Reload", Icon.FromHandle(Resources.Reload.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Provision", Icon.FromHandle(Resources.Provision.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Suspend", Icon.FromHandle(Resources.Suspend.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Resume", Icon.FromHandle(Resources.Resume.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Halt", Icon.FromHandle(Resources.Stop.Handle).ToBitmap()),
-                    new ToolStripMenuItem("Destroy", Icon.FromHandle(Resources.Destroy.Handle).ToBitmap())
-                };
-            }
+            return
+                Enum.GetNames(typeof (VagrantCommand))
+                    .Select(
+                        name =>
+                            new ToolStripMenuItem(name,
+                                Icon.FromHandle(((Icon) Resources.ResourceManager.GetObject(name)).Handle).ToBitmap(),
+                                (s, e) =>
+                                    _manager.GetActionForVagrantInstanceCommand(instance,
+                                        (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)).Invoke()));
         }
-
-        /*protected override void Dispose(bool isDisposing)
-        {
-            if (isDisposing)
-            {
-                // Release the icon resource.
-                trayIcon.Dispose();
-            }
-
-            base.Dispose(isDisposing);
-        }*/
     }
 }
