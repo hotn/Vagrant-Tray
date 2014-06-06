@@ -12,7 +12,7 @@ namespace VagrantTray
         private NotifyIcon trayIcon;
         private ContextMenuStrip trayMenu;
 
-        private readonly VagrantManager _manager = new VagrantManager();
+        private VagrantManager _manager;
 
         public TrayForm()
         {
@@ -37,6 +37,8 @@ namespace VagrantTray
             // Add menu to tray icon and show it.
             trayIcon.ContextMenuStrip = trayMenu;
             trayIcon.Visible = true;
+
+            _manager = new VagrantManager(trayIcon);
 
             RebuildList();
         }

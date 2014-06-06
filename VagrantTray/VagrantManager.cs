@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace VagrantTray
 {
@@ -10,10 +11,16 @@ namespace VagrantTray
         private Process _process;
         private List<string> _outputLines = new List<string>();
 
-        private List<VagrantInstance> _instances = new List<VagrantInstance>(); 
+        private List<VagrantInstance> _instances = new List<VagrantInstance>();
 
-        public VagrantManager()
+        private NotifyIcon _icon;
+
+        private List<string> _messages = new List<string>();
+
+        public VagrantManager(NotifyIcon icon)
         {
+            _icon = icon;
+
             Init();
         }
 
@@ -97,11 +104,41 @@ namespace VagrantTray
             Console.WriteLine("Error: " + dataReceivedEventArgs.Data);
         }
 
-        public List<VagrantInstance> GetInstances()
+        private void ProcessOnCommandDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            _instances = new List<VagrantInstance>();
-            GetGlobalStatus();
-            return _instances;
+            //Console.WriteLine(dataReceivedEventArgs.Data);
+            Console.WriteLine(_messages);
+            _messages.Add(dataReceivedEventArgs.Data);
+
+            ShowTrayTip();
+        }
+
+        private void ProcessOnCommandExited(object sender, EventArgs dataReceivedEventArgs)
+        {
+            Console.WriteLine("Command complete");
+            _messages.Add("Command complete");
+
+            ShowTrayTip();
+
+            _messages.Clear();
+        }
+
+        private void ShowTrayTip()
+        {
+            while (_messages.Sum(m => m == null ? 0 : m.Length) + _messages.Count > 255)
+            {
+                _messages.RemoveAt(0);
+            }
+
+            var balloonMessage = String.Join(Environment.NewLine, _messages);
+
+            if (balloonMessage.Equals(String.Empty))
+            {
+                return;
+            }
+
+            _icon.BalloonTipText = balloonMessage;
+            _icon.ShowBalloonTip(1000);
         }
 
         private void RunInstanceCommand(string args)
@@ -110,9 +147,9 @@ namespace VagrantTray
 
             _process.StartInfo.Arguments = args;
 
-            _process.OutputDataReceived += (sender, eventArgs) => Console.WriteLine(eventArgs.Data);
+            _process.OutputDataReceived += ProcessOnCommandDataReceived;
             _process.ErrorDataReceived += ProcessOnErrorDataReceived;
-            _process.Exited += (sender, eventArgs) => Console.WriteLine("Command complete");
+            _process.Exited += ProcessOnCommandExited;
 
 
             _process.Start();
@@ -121,7 +158,15 @@ namespace VagrantTray
                 _process.BeginOutputReadLine();
             }
             catch (Exception) { }
+            
             _process.WaitForExit();
+        }
+
+        public List<VagrantInstance> GetInstances()
+        {
+            _instances = new List<VagrantInstance>();
+            GetGlobalStatus();
+            return _instances;
         }
 
         public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantCommand command)
