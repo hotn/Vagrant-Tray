@@ -8,6 +8,7 @@
         Suspend,
         Resume,
         Halt,
-        Destroy
+        Destroy,
+        Status
     }
 }

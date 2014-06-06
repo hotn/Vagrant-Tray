@@ -105,8 +105,14 @@ namespace VagrantTray
                 Enum.GetNames(typeof (VagrantCommand))
                     .Select(
                         name =>
-                            new ToolStripMenuItem(name,
-                                Icon.FromHandle(((Icon) Resources.ResourceManager.GetObject(name)).Handle).ToBitmap(),
+                        {
+                            Bitmap icon = null;
+                            var resource = Resources.ResourceManager.GetObject(name);
+                            if (resource != null)
+                            {
+                                icon = Icon.FromHandle(((Icon) resource).Handle).ToBitmap();
+                            }
+                            return new ToolStripMenuItem(name, icon,
                                 (s, e) =>
                                     _manager.GetActionForVagrantInstanceCommand(instance,
                                         (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)).Invoke()));
