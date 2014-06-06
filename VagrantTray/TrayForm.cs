@@ -114,8 +114,12 @@ namespace VagrantTray
                             }
                             return new ToolStripMenuItem(name, icon,
                                 (s, e) =>
+                                {
                                     _manager.GetActionForVagrantInstanceCommand(instance,
-                                        (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)).Invoke()));
+                                        (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)).Invoke();
+                                    RebuildList();
+                                });
+                        });
         }
     }
 }

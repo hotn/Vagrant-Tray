@@ -130,6 +130,7 @@ namespace VagrantTray
             {
                 Console.WriteLine("Command for " + command + " " + instance.Id);
                 RunInstanceCommand(command.ToString().ToLower() + " " + instance.Id);
+                RunInstanceCommand(VagrantCommand.Status.ToString().ToLower() + " " + instance.Id);
             };
         }
     }
