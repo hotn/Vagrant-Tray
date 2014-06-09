@@ -35,8 +35,20 @@ namespace MikeWaltonWeb.VagrantTray.UI
         private void AddDefaultMenuItems()
         {
             Items.Add(new ToolStripSeparator());
-            Items.Add("Settings...", null, ExitClicked);
-            Items.Add("Exit", null, SettingsClicked);
+            Items.Add("Settings...", null, (sender, args) =>
+            {
+                if (SettingsClicked != null)
+                {
+                    SettingsClicked(this, EventArgs.Empty);
+                }
+            });
+            Items.Add("Exit", null, (sender, args) =>
+            {
+                if (ExitClicked != null)
+                {
+                    ExitClicked(this, EventArgs.Empty);
+                }
+            });
         }
 
         public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantCommand, Action> commandActions)

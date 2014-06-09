@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using MikeWaltonWeb.VagrantTray.Business.Commands;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
@@ -15,20 +16,36 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private List<VagrantInstance> _instances = new List<VagrantInstance>();
 
-        private readonly VagrantSystemTrayMenu _menu;
+        private VagrantSystemTrayMenu _menu;
 
         private readonly List<string> _messages = new List<string>();
 
-        public VagrantManager(VagrantSystemTrayMenu menu)
-        {
-            _menu = menu;
+        private static VagrantManager _instance;
 
+        private VagrantManager()
+        {
             Init();
+        }
+
+        public static VagrantManager CreateInstance()
+        {
+            if (_instance != null)
+            {
+                throw new InvalidOperationException("Cannot create more than one instance of VagrantManager");
+            }
+
+            _instance = new VagrantManager();
+
+            return _instance;
         }
 
         private void Init()
         {
+            _menu = new VagrantSystemTrayMenu();
+
             _menu.SettingsClicked += (sender, args) => RebuildList();
+            _menu.ExitClicked += (sender, args) => TerminateApplication();
+
             RebuildList();
         }
 
@@ -183,6 +200,12 @@ namespace MikeWaltonWeb.VagrantTray.Business
             catch (Exception) { }
             
             _process.WaitForExit();
+        }
+
+        private void TerminateApplication()
+        {
+            _menu.Dispose();
+            Application.Current.Shutdown();
         }
 
         public List<VagrantInstance> GetInstances()
