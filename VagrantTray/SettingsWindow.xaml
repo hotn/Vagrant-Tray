@@ -1,0 +1,55 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="VagrantTray.SettingsWindow"
+	Title="Vagrant Tray Settings"
+	Width="640" Height="480">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<TabControl Margin="10">
+			<TabItem Header="Bookmarks">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="50"/>
+					</Grid.RowDefinitions>
+					<DataGrid Margin="10">
+						<DataGrid.Columns>
+							<DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Bookmark Name"/>
+							<DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="ID"/>
+							<DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Name"/>
+							<DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Provider"/>
+							<DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Location"/>
+							<DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Actions">
+								<DataGridTemplateColumn.CellTemplate>
+									<DataTemplate>
+										<StackPanel>
+											<Button x:Name="ButtonRowEdit" Content="Edit" />
+											<Button x:Name="ButtonRowDelete" Content="Delete" />
+										</StackPanel>
+									</DataTemplate>
+								</DataGridTemplateColumn.CellTemplate>
+							</DataGridTemplateColumn>
+						</DataGrid.Columns>
+					</DataGrid>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="1">
+						<Button x:Name="ButtonAddBookmark" Content="Add Bookmark" VerticalAlignment="Center" Margin="0,0,5,0"/>
+					</StackPanel>
+				</Grid>
+			</TabItem>
+			<TabItem Header="Settings">
+				<Grid Background="#FFE5E5E5"/>
+			</TabItem>
+		</TabControl>
+		
+		<StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
+			<Button x:Name="ButtonOk1" Content="Ok" VerticalAlignment="Center" Margin="0,0,5,0"/>
+			<Button x:Name="ButtonCancel1" Content="Cancel" VerticalAlignment="Center" Margin="5,0,0,0"/>
+		</StackPanel>
+	</Grid>
+</Window>
