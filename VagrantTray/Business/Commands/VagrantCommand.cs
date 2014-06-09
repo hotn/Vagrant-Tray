@@ -1,4 +1,4 @@
-﻿namespace MikeWaltonWeb.VagrantTray.Business
+﻿namespace MikeWaltonWeb.VagrantTray.Business.Commands
 {
     public enum VagrantCommand
     {

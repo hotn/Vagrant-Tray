@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
-using MikeWaltonWeb.VagrantTray.Business;
+using MikeWaltonWeb.VagrantTray.Business.Commands;
 using MikeWaltonWeb.VagrantTray.Model;
 
 namespace MikeWaltonWeb.VagrantTray.UI
@@ -40,30 +39,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             Items.Add("Exit", null, SettingsClicked);
         }
 
-        private IEnumerable<ToolStripItem> GenerateMenuItemsForVagrantInstance(VagrantInstance instance)
-        {
-            return
-                Enum.GetNames(typeof(VagrantCommand))
-                    .Select(
-                        name =>
-                        {
-                            Bitmap icon = null;
-                            var resource = Properties.Resources.ResourceManager.GetObject(name);
-                            if (resource != null)
-                            {
-                                icon = Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
-                            }
-                            return new ToolStripMenuItem(name, icon,
-                                (s, e) =>
-                                {
-                                    /*_manager.GetActionForVagrantInstanceCommand(instance,
-                                        (VagrantCommand)Enum.Parse(typeof(VagrantCommand), name)).Invoke();
-                                    RebuildList();*/
-                                });
-                        });
-        }
-
-        public void AddInstanceSubmenu(VagrantInstance instance)
+        public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantCommand, Action> commandActions)
         {
             Bitmap status = null;
             switch (instance.State)
@@ -85,9 +61,22 @@ namespace MikeWaltonWeb.VagrantTray.UI
             submenu.DropDownItems.Add(new ToolStripMenuItem("State: " + instance.State) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripMenuItem("Directory: " + instance.Directory) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripSeparator());
-            foreach (var vagrantMenuItem in GenerateMenuItemsForVagrantInstance(instance))
+            foreach (var commandAction in commandActions)
             {
-                submenu.DropDownItems.Add(vagrantMenuItem);
+                //submenu.DropDownItems.Add(vagrantMenuItem);
+
+                Bitmap icon = null;
+                var resource = Properties.Resources.ResourceManager.GetObject(commandAction.Key.ToString());
+                if (resource != null)
+                {
+                    icon = Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
+                }
+
+                submenu.DropDownItems.Add(new ToolStripMenuItem(commandAction.Key.ToString(), icon,
+                    (s, e) =>
+                    {
+                        commandAction.Value.Invoke();
+                    }));
             }
 
             Items.Insert(0, submenu);

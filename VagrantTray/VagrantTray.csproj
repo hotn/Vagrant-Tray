@@ -62,7 +62,7 @@
     <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Business\VagrantCommand.cs" />
+    <Compile Include="Business\Commands\VagrantCommand.cs" />
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
     <Compile Include="UI\VagrantSystemTrayMenu.cs">

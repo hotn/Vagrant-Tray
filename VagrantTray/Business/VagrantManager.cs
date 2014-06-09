@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
+using MikeWaltonWeb.VagrantTray.Business.Commands;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
 
@@ -15,9 +15,9 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private List<VagrantInstance> _instances = new List<VagrantInstance>();
 
-        private VagrantSystemTrayMenu _menu;
+        private readonly VagrantSystemTrayMenu _menu;
 
-        private List<string> _messages = new List<string>();
+        private readonly List<string> _messages = new List<string>();
 
         public VagrantManager(VagrantSystemTrayMenu menu)
         {
@@ -28,7 +28,29 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void Init()
         {
-            
+            _menu.SettingsClicked += (sender, args) => RebuildList();
+            RebuildList();
+        }
+
+        private void RebuildList()
+        {
+            _menu.Reset();
+
+            var instances = GetInstances();
+            foreach (var vagrantInstance in instances)
+            {
+                _menu.AddInstanceSubmenu(vagrantInstance, GetInstanceCommandActions(vagrantInstance));
+            }
+        }
+
+        private Dictionary<VagrantCommand, Action> GetInstanceCommandActions(VagrantInstance instance)
+        {
+            return
+                Enum.GetNames(typeof (VagrantCommand))
+                    .ToDictionary(name => (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name),
+                        name =>
+                            GetActionForVagrantInstanceCommand(instance,
+                                (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)));
         }
 
         private void CreateProcess()
