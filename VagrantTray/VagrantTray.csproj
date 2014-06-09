@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MikeWaltonWeb.VagrantTray.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -62,6 +65,9 @@
     <Compile Include="Business\VagrantCommand.cs" />
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
+    <Compile Include="UI\VagrantSystemTrayMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using MikeWaltonWeb.VagrantTray.Model;
+using MikeWaltonWeb.VagrantTray.UI;
 
 namespace MikeWaltonWeb.VagrantTray.Business
 {
@@ -14,13 +15,13 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private List<VagrantInstance> _instances = new List<VagrantInstance>();
 
-        private NotifyIcon _icon;
+        private VagrantSystemTrayMenu _menu;
 
         private List<string> _messages = new List<string>();
 
-        public VagrantManager(NotifyIcon icon)
+        public VagrantManager(VagrantSystemTrayMenu menu)
         {
-            _icon = icon;
+            _menu = menu;
 
             Init();
         }
@@ -138,8 +139,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 return;
             }
 
-            _icon.BalloonTipText = balloonMessage;
-            _icon.ShowBalloonTip(1000);
+            _menu.ShowMessageBalloon(balloonMessage);
         }
 
         private void RunInstanceCommand(string args)
