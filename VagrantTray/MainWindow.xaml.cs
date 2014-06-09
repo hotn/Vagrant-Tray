@@ -2,70 +2,71 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
-using VagrantTray.Properties;
+using Application = System.Windows.Application;
 
 namespace VagrantTray
 {
-    public partial class TrayForm : Form
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow
     {
-        private NotifyIcon trayIcon;
-        private ContextMenuStrip trayMenu;
+        private NotifyIcon _trayIcon;
+        private ContextMenuStrip _trayMenu;
 
         private VagrantManager _manager;
 
-        public TrayForm()
+        public MainWindow()
         {
-            CreateTrayMenu();
+            InitializeComponent();
 
-            Closed += (sender, args) => trayMenu.Dispose();
+            Visibility = Visibility.Hidden;
+
+            CreateTrayMenu();
         }
 
         private void CreateTrayMenu()
         {
             // Create a simple tray menu with only one item.
-            trayMenu = new ContextMenuStrip();
+            _trayMenu = new ContextMenuStrip();
 
             // Create a tray icon. In this example we use a
             // standard system icon for simplicity, but you
             // can of course use your own custom icon too.
-            trayIcon = new NotifyIcon();
-            trayIcon.Text = "Vagrant Tray";
-            //trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
-            trayIcon.Icon = Icon.FromHandle(Resources.Vagrant.GetHicon());
+            _trayIcon = new NotifyIcon();
+            _trayIcon.Text = "Vagrant Tray";
+
+            //_trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
+            _trayIcon.Icon = System.Drawing.Icon.FromHandle(Properties.Resources.Vagrant.GetHicon());
 
             // Add menu to tray icon and show it.
-            trayIcon.ContextMenuStrip = trayMenu;
-            trayIcon.Visible = true;
+            _trayIcon.ContextMenuStrip = _trayMenu;
+            _trayIcon.Visible = true;
 
-            _manager = new VagrantManager(trayIcon);
+            _manager = new VagrantManager(_trayIcon);
 
             RebuildList();
         }
 
         private void AddDefaultMenuItems()
         {
-            trayMenu.Items.Add(new ToolStripSeparator());
-            trayMenu.Items.Add("Refresh List", null, (s, e) => RebuildList());
-            trayMenu.Items.Add("Exit", null, OnExit);
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            Visible = false; // Hide form window.
-            ShowInTaskbar = false; // Remove from taskbar.
-
-            base.OnLoad(e);
+            _trayMenu.Items.Add(new ToolStripSeparator());
+            _trayMenu.Items.Add("Refresh List", null, (s, e) => RebuildList());
+            _trayMenu.Items.Add("Exit", null, OnExit);
         }
 
         private void OnExit(object sender, EventArgs e)
         {
-            Application.Exit();
+            _trayIcon.Visible = false;
+            _trayMenu.Dispose();
+            Application.Current.Shutdown();
         }
 
         private void RebuildList()
         {
-            trayMenu.Items.Clear();
+            _trayMenu.Items.Clear();
 
             var instances = _manager.GetInstances();
             foreach (var vagrantInstance in instances)
@@ -74,13 +75,13 @@ namespace VagrantTray
                 switch (vagrantInstance.State)
                 {
                     case "running":
-                        status = Icon.FromHandle(Resources.Green.Handle).ToBitmap();
+                        status = System.Drawing.Icon.FromHandle(Properties.Resources.Green.Handle).ToBitmap();
                         break;
                     case "saved":
-                        status = Icon.FromHandle(Resources.Yellow.Handle).ToBitmap();
+                        status = System.Drawing.Icon.FromHandle(Properties.Resources.Yellow.Handle).ToBitmap();
                         break;
                     case "poweroff":
-                        status = Icon.FromHandle(Resources.Red.Handle).ToBitmap();
+                        status = System.Drawing.Icon.FromHandle(Properties.Resources.Red.Handle).ToBitmap();
                         break;
                 }
 
@@ -95,7 +96,7 @@ namespace VagrantTray
                     submenu.DropDownItems.Add(vagrantMenuItem);
                 }
 
-                trayMenu.Items.Add(submenu);
+                _trayMenu.Items.Add(submenu);
             }
 
             AddDefaultMenuItems();
@@ -104,21 +105,21 @@ namespace VagrantTray
         private IEnumerable<ToolStripItem> GenerateMenuItemsForVagrantInstance(VagrantInstance instance)
         {
             return
-                Enum.GetNames(typeof (VagrantCommand))
+                Enum.GetNames(typeof(VagrantCommand))
                     .Select(
                         name =>
                         {
                             Bitmap icon = null;
-                            var resource = Resources.ResourceManager.GetObject(name);
+                            var resource = Properties.Resources.ResourceManager.GetObject(name);
                             if (resource != null)
                             {
-                                icon = Icon.FromHandle(((Icon) resource).Handle).ToBitmap();
+                                icon = System.Drawing.Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
                             }
                             return new ToolStripMenuItem(name, icon,
                                 (s, e) =>
                                 {
                                     _manager.GetActionForVagrantInstanceCommand(instance,
-                                        (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)).Invoke();
+                                        (VagrantCommand)Enum.Parse(typeof(VagrantCommand), name)).Invoke();
                                     RebuildList();
                                 });
                         });

@@ -22,7 +22,7 @@ namespace VagrantTray.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace VagrantTray.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VagrantTray.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace VagrantTray.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Destroy {
+        internal static System.Drawing.Icon Destroy {
             get {
                 object obj = ResourceManager.GetObject("Destroy", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -73,7 +73,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Destroy_2 {
+        internal static System.Drawing.Icon Destroy_2 {
             get {
                 object obj = ResourceManager.GetObject("Destroy_2", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -83,7 +83,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Green {
+        internal static System.Drawing.Icon Green {
             get {
                 object obj = ResourceManager.GetObject("Green", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -93,7 +93,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Halt {
+        internal static System.Drawing.Icon Halt {
             get {
                 object obj = ResourceManager.GetObject("Halt", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -103,7 +103,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Provision {
+        internal static System.Drawing.Icon Provision {
             get {
                 object obj = ResourceManager.GetObject("Provision", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -113,7 +113,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Red {
+        internal static System.Drawing.Icon Red {
             get {
                 object obj = ResourceManager.GetObject("Red", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -123,7 +123,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Reload {
+        internal static System.Drawing.Icon Reload {
             get {
                 object obj = ResourceManager.GetObject("Reload", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -133,7 +133,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Resume {
+        internal static System.Drawing.Icon Resume {
             get {
                 object obj = ResourceManager.GetObject("Resume", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -143,7 +143,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Suspend {
+        internal static System.Drawing.Icon Suspend {
             get {
                 object obj = ResourceManager.GetObject("Suspend", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -153,7 +153,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Up {
+        internal static System.Drawing.Icon Up {
             get {
                 object obj = ResourceManager.GetObject("Up", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -163,7 +163,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Vagrant {
+        internal static System.Drawing.Bitmap Vagrant {
             get {
                 object obj = ResourceManager.GetObject("Vagrant", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +173,7 @@ namespace VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon Yellow {
+        internal static System.Drawing.Icon Yellow {
             get {
                 object obj = ResourceManager.GetObject("Yellow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));

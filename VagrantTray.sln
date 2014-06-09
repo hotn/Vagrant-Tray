@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VagrantTray", "VagrantTray\VagrantTray.csproj", "{B1F68C55-A75F-4BDE-974F-FEED12BCB7C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VagrantTray", "VagrantTray\VagrantTray.csproj", "{F39D9553-72ED-4032-AD30-AAF4731E23D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B1F68C55-A75F-4BDE-974F-FEED12BCB7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1F68C55-A75F-4BDE-974F-FEED12BCB7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1F68C55-A75F-4BDE-974F-FEED12BCB7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1F68C55-A75F-4BDE-974F-FEED12BCB7C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39D9553-72ED-4032-AD30-AAF4731E23D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39D9553-72ED-4032-AD30-AAF4731E23D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39D9553-72ED-4032-AD30-AAF4731E23D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39D9553-72ED-4032-AD30-AAF4731E23D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
