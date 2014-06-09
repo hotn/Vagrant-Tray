@@ -1,4 +1,4 @@
-﻿namespace VagrantTray
+﻿namespace MikeWaltonWeb.VagrantTray.Model
 {
     public class VagrantInstance
     {

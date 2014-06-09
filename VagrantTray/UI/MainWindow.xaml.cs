@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using MikeWaltonWeb.VagrantTray.Business;
+using MikeWaltonWeb.VagrantTray.Model;
 using Application = System.Windows.Application;
 
-namespace VagrantTray
+namespace MikeWaltonWeb.VagrantTray.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

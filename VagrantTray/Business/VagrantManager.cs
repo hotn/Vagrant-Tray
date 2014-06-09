@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using MikeWaltonWeb.VagrantTray.Model;
 
-namespace VagrantTray
+namespace MikeWaltonWeb.VagrantTray.Business
 {
     public class VagrantManager
     {

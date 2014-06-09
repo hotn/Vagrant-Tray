@@ -1,4 +1,4 @@
-﻿namespace VagrantTray
+﻿namespace MikeWaltonWeb.VagrantTray
 {
     /// <summary>
     /// Interaction logic for App.xaml
