@@ -22,6 +22,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private static VagrantManager _instance;
 
+        private SettingsWindow _settingsWindow;
+
         private VagrantManager()
         {
             Init();
@@ -43,7 +45,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             _menu = new VagrantSystemTrayMenu();
 
-            _menu.SettingsClicked += (sender, args) => RebuildList();
+            //_menu.SettingsClicked += (sender, args) => RebuildList();
+            _menu.SettingsClicked += (sender, args) => ShowSettings();
             _menu.ExitClicked += (sender, args) => TerminateApplication();
 
             RebuildList();
@@ -58,6 +61,17 @@ namespace MikeWaltonWeb.VagrantTray.Business
             {
                 _menu.AddInstanceSubmenu(vagrantInstance, GetInstanceCommandActions(vagrantInstance));
             }
+        }
+
+        private void ShowSettings()
+        {
+            if (_settingsWindow == null)
+            {
+                _settingsWindow = new SettingsWindow();
+            }
+
+            _settingsWindow.Show();
+            _settingsWindow.Activate();
         }
 
         private Dictionary<VagrantCommand, Action> GetInstanceCommandActions(VagrantInstance instance)
