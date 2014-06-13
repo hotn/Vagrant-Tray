@@ -53,30 +53,28 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantCommand, Action> commandActions)
         {
-            Bitmap status = null;
+            var status = MenuItemIcon.Loading;
             switch (instance.State)
             {
                 case "running":
-                    status = Icon.FromHandle(Properties.Resources.Green.Handle).ToBitmap();
+                    status = MenuItemIcon.Running;
                     break;
                 case "saved":
-                    status = Icon.FromHandle(Properties.Resources.Yellow.Handle).ToBitmap();
+                    status = MenuItemIcon.Saved;
                     break;
                 case "poweroff":
-                    status = Icon.FromHandle(Properties.Resources.Red.Handle).ToBitmap();
+                    status = MenuItemIcon.Poweroff;
                     break;
             }
 
-            var submenu = new ToolStripMenuItem(instance.Id, status);
-            submenu.DropDownItems.Add(new ToolStripMenuItem("Name: " + instance.Name) { Enabled = false });
-            submenu.DropDownItems.Add(new ToolStripMenuItem("Provider: " + instance.Provider) { Enabled = false });
-            submenu.DropDownItems.Add(new ToolStripMenuItem("State: " + instance.State) { Enabled = false });
-            submenu.DropDownItems.Add(new ToolStripMenuItem("Directory: " + instance.Directory) { Enabled = false });
+            var submenu = new VagrantToolStripMenuItem(instance.Id, status);
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + instance.Name) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Provider: " + instance.Provider) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + instance.State) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + instance.Directory) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripSeparator());
             foreach (var commandAction in commandActions)
             {
-                //submenu.DropDownItems.Add(vagrantMenuItem);
-
                 Bitmap icon = null;
                 var resource = Properties.Resources.ResourceManager.GetObject(commandAction.Key.ToString());
                 if (resource != null)

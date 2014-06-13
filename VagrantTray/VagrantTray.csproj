@@ -68,6 +68,9 @@
     <Compile Include="UI\VagrantSystemTrayMenu.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\VagrantToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -145,6 +148,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LoadingStrip.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

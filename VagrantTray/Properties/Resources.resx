@@ -130,6 +130,9 @@
   <data name="Halt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Stop.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="LoadingStrip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoadingStrip.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Provision" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Provision.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
