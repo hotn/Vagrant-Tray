@@ -78,6 +78,26 @@ namespace MikeWaltonWeb.VagrantTray.UI
                 _loadingBitmaps[i] = System.Drawing.Icon.FromHandle(bmp2.GetHicon()).ToBitmap();
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_loadingBitmaps != null)
+            {
+                foreach (var loadingBitmap in _loadingBitmaps)
+                {
+                    loadingBitmap.Dispose();
+                }
+
+                _loadingBitmaps = null;
+            }
+
+            if (_timer != null)
+            {
+                _timer.Dispose();
+            }
+        }
     }
 
     public enum MenuItemIcon

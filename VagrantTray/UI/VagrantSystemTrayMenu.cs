@@ -116,6 +116,16 @@ namespace MikeWaltonWeb.VagrantTray.UI
             _icon.Visible = false;
             _icon.Dispose();
             _icon = null;
+
+            foreach (var item in Items)
+            {
+                var disposable = item as IDisposable;
+                if (disposable != null)
+                {
+                    disposable.Dispose();
+                }
+            }
+            Items.Clear();
         }
     }
 }
