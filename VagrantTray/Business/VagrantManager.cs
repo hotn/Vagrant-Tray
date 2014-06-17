@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using MikeWaltonWeb.VagrantTray.Business.Commands;
+using MikeWaltonWeb.VagrantTray.Business.VagrantExe;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
 
@@ -11,7 +13,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 {
     public class VagrantManager
     {
-        private Process _process;
+        private VagrantProcess _process;
         private List<string> _outputLines = new List<string>();
 
         private List<VagrantInstance> _instances = new List<VagrantInstance>();
@@ -22,7 +24,9 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private static VagrantManager _instance;
 
-        private SettingsWindow _settingsWindow;
+        private ApplicationData _applicationData;
+
+        private SettingsManager _settingsManager;
 
         private VagrantManager()
         {
@@ -43,13 +47,38 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void Init()
         {
+            LoadApplicationData();
+
+            _settingsManager = new SettingsManager(_applicationData);
+
             _menu = new VagrantSystemTrayMenu();
 
             //_menu.SettingsClicked += (sender, args) => RebuildList();
-            _menu.SettingsClicked += (sender, args) => ShowSettings();
+            _menu.SettingsClicked += (sender, args) => _settingsManager.ShowSettings();
             _menu.ExitClicked += (sender, args) => TerminateApplication();
 
             RebuildList();
+        }
+
+        private void LoadApplicationData()
+        {
+            _applicationData = new ApplicationData();
+
+            _applicationData.Bookmarks = LoadBookmarks();
+        }
+
+        private static List<Bookmark> LoadBookmarks()
+        {
+            using (var ms = new MemoryStream(Convert.FromBase64String(Properties.Settings.Default.SavedBookmarks)))
+            {
+                if (ms.Length != 0)
+                {
+                    var bf = new BinaryFormatter();
+                    return (List<Bookmark>) bf.Deserialize(ms);
+                }
+            }
+
+            return new List<Bookmark>();
         }
 
         private void RebuildList()
@@ -63,25 +92,14 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
         }
 
-        private void ShowSettings()
-        {
-            if (_settingsWindow == null)
-            {
-                _settingsWindow = new SettingsWindow();
-            }
-
-            _settingsWindow.Show();
-            _settingsWindow.Activate();
-        }
-
-        private Dictionary<VagrantCommand, Action> GetInstanceCommandActions(VagrantInstance instance)
+        private Dictionary<VagrantProcess.Command, Action> GetInstanceCommandActions(VagrantInstance instance)
         {
             return
-                Enum.GetNames(typeof (VagrantCommand))
-                    .ToDictionary(name => (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name),
+                Enum.GetNames(typeof(VagrantProcess.Command))
+                    .ToDictionary(name => (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name),
                         name =>
                             GetActionForVagrantInstanceCommand(instance,
-                                (VagrantCommand) Enum.Parse(typeof (VagrantCommand), name)));
+                                (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name)));
         }
 
         private void CreateProcess()
@@ -92,24 +110,15 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 _process.Dispose();
             }
 
-            _process = new Process();
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "vagrant.exe",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            _process.StartInfo = startInfo;
-            _process.EnableRaisingEvents = true;
+            _process = new VagrantProcess();
+            
         }
 
         private void GetGlobalStatus()
         {
             CreateProcess();
 
-            _process.StartInfo.Arguments = "global-status";
+            _process.VagrantCommand = VagrantProcess.Command.GlobalStatus;
 
             _process.OutputDataReceived += ProcessOnGlobalStatusOutputDataReceived;
             _process.ErrorDataReceived += ProcessOnErrorDataReceived;
@@ -117,6 +126,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
             
 
             _process.Start();
+
             try
             {
                 _process.BeginOutputReadLine();
@@ -195,11 +205,12 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _menu.ShowMessageBalloon(balloonMessage);
         }
 
-        private void RunInstanceCommand(string args)
+        private void RunInstanceCommand(VagrantInstance instance, VagrantProcess.Command command)
         {
             CreateProcess();
 
-            _process.StartInfo.Arguments = args;
+            _process.Instance = instance;
+            _process.VagrantCommand = command;
 
             _process.OutputDataReceived += ProcessOnCommandDataReceived;
             _process.ErrorDataReceived += ProcessOnErrorDataReceived;
@@ -229,13 +240,13 @@ namespace MikeWaltonWeb.VagrantTray.Business
             return _instances;
         }
 
-        public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantCommand command)
+        public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantProcess.Command command)
         {
             return () =>
             {
                 Console.WriteLine("Command for " + command + " " + instance.Id);
-                RunInstanceCommand(command.ToString().ToLower() + " " + instance.Id);
-                RunInstanceCommand(VagrantCommand.Status.ToString().ToLower() + " " + instance.Id);
+                RunInstanceCommand(instance, command);
+                RunInstanceCommand(instance, VagrantProcess.Command.Status);
             };
         }
     }

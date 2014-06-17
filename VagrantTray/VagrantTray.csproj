@@ -71,13 +71,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business\SettingsManager.cs" />
+    <Compile Include="Business\Utility\Windows\Win32Wrapper.cs" />
+    <Compile Include="Business\VagrantExe\VagrantProcess.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
     <Compile Include="Settings\SavedBookmarksSetting.cs" />
+    <Compile Include="UI\BookmarkSettingsWindow.xaml.cs">
+      <DependentUpon>BookmarkSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Business\Commands\VagrantCommand.cs" />
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
     <Compile Include="UI\VagrantSystemTrayMenu.cs">
@@ -88,6 +95,7 @@
     </Compile>
     <Compile Include="ViewModel\BookmarkViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Page Include="UI\BookmarkSettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

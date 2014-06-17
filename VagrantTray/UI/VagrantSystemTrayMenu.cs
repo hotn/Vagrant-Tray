@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using MikeWaltonWeb.VagrantTray.Business.Commands;
+using MikeWaltonWeb.VagrantTray.Business.VagrantExe;
 using MikeWaltonWeb.VagrantTray.Model;
 
 namespace MikeWaltonWeb.VagrantTray.UI
@@ -51,7 +51,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             });
         }
 
-        public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantCommand, Action> commandActions)
+        public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantProcess.Command, Action> commandActions)
         {
             var status = MenuItemIcon.Loading;
             switch (instance.State)
