@@ -73,6 +73,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
+    <Compile Include="Settings\SavedBookmarksSetting.cs" />
     <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
