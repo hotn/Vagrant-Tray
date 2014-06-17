@@ -85,6 +85,8 @@
     <Compile Include="UI\VagrantToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ViewModel\BookmarkViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -161,9 +163,7 @@
   <ItemGroup>
     <None Include="Resources\Vagrant.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\LoadingStrip.gif" />
   </ItemGroup>
