@@ -22,5 +22,17 @@ namespace MikeWaltonWeb.VagrantTray.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SavedBookmarks {
+            get {
+                return ((string)(this["SavedBookmarks"]));
+            }
+            set {
+                this["SavedBookmarks"] = value;
+            }
+        }
     }
 }
