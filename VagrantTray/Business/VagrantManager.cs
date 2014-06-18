@@ -85,10 +85,9 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             _menu.Reset();
 
-            var instances = GetInstances();
-            foreach (var vagrantInstance in instances)
+            foreach (var bookmark in _applicationData.Bookmarks)
             {
-                _menu.AddInstanceSubmenu(vagrantInstance, GetInstanceCommandActions(vagrantInstance));
+                _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark.VagrantInstance));
             }
         }
 
@@ -111,7 +110,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
 
             _process = new VagrantProcess();
-            
         }
 
         private void GetGlobalStatus()

@@ -51,10 +51,10 @@ namespace MikeWaltonWeb.VagrantTray.UI
             });
         }
 
-        public void AddInstanceSubmenu(VagrantInstance instance, Dictionary<VagrantProcess.Command, Action> commandActions)
+        public void AddBookmarkSubmenu(Bookmark bookmark, Dictionary<VagrantProcess.Command, Action> commandActions)
         {
             var status = MenuItemIcon.Loading;
-            switch (instance.State)
+            switch (bookmark.VagrantInstance.State)
             {
                 case "running":
                     status = MenuItemIcon.Running;
@@ -67,11 +67,11 @@ namespace MikeWaltonWeb.VagrantTray.UI
                     break;
             }
 
-            var submenu = new VagrantToolStripMenuItem(instance.Id, status);
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + instance.Name) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Provider: " + instance.Provider) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + instance.State) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + instance.Directory) { Enabled = false });
+            var submenu = new VagrantToolStripMenuItem(bookmark.Name, status);
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.VagrantInstance.Name) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Provider: " + bookmark.VagrantInstance.Provider) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.State) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + bookmark.VagrantInstance.Directory) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripSeparator());
             foreach (var commandAction in commandActions)
             {
