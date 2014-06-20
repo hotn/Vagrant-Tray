@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
 
 namespace MikeWaltonWeb.VagrantTray.UI
 {
+    [System.ComponentModel.DesignerCategory("Code")]
     public class VagrantToolStripMenuItem : ToolStripMenuItem
     {
         private static Bitmap[] _loadingBitmaps;
@@ -16,15 +18,52 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         }
 
+        public VagrantToolStripMenuItem(string text, Image image, EventHandler onClick) : base(text, image, onClick)
+        {
+            
+        }
+
         public VagrantToolStripMenuItem(string text, MenuItemIcon icon) : base(text)
         {
             Icon = icon;
         }
 
+        public VagrantToolStripMenuItem(Bookmark bookmark)
+            : this(
+                bookmark.Name,
+                (MenuItemIcon) Enum.Parse(typeof (MenuItemIcon), bookmark.VagrantInstance.CurrentState.ToString()))
+        {
+            bookmark.VagrantInstance.StateChanged += OnVagrantInstanceStateChanged;
+        }
+
+        public void OnVagrantInstanceStateChanged(object sender, EventArgs eventArgs)
+        {
+            var vagrantInstance = (VagrantInstance) sender;
+            //TODO: this might not be the best implementation of enums
+            Icon =
+                (MenuItemIcon)Enum.Parse(typeof(MenuItemIcon), vagrantInstance.CurrentState.ToString());
+
+            //Enable menu item click if vagrant is no longer processing.
+            if (IsActionItem && vagrantInstance.CurrentState != VagrantInstance.State.Loading)
+            {
+                Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether the menu item is associated to an action and can be clicked.
+        /// </summary>
+        public bool IsActionItem { get; set; }
+
         public MenuItemIcon Icon
         {
             set
             {
+                if (_timer != null)
+                {
+                    _timer.Dispose();
+                }
+
                 switch (value)
                 {
                     case MenuItemIcon.Running:

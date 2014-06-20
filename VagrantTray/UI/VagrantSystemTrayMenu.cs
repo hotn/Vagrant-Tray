@@ -66,17 +66,17 @@ namespace MikeWaltonWeb.VagrantTray.UI
             foreach (var commandAction in commandActions)
             {
                 Bitmap icon = null;
-                var resource = Properties.Resources.ResourceManager.GetObject(commandAction.Key.ToString());
+                var resource = Properties.Resources.ResourceManager.GetObject(commandAction.Key);
                 if (resource != null)
                 {
                     icon = Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
                 }
 
-                submenu.DropDownItems.Add(new ToolStripMenuItem(commandAction.Key.ToString(), icon,
+                submenu.DropDownItems.Add(new VagrantToolStripMenuItem(commandAction.Key, icon,
                     (s, e) =>
                     {
                         commandAction.Value.Invoke();
-                    }));
+                    }) {IsActionItem = true});
             }
 
             Items.Insert(0, submenu);
