@@ -13,19 +13,19 @@
 	<StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Bookmark Name:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" DataContext="{Binding BookmarkName, Mode=OneWay}"/>
+			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding BookmarkName, Mode=OneWay}"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Vagrant ID:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" DataContext="{Binding VagrantInstanceId, Mode=OneWay}"/>
+            <TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding VagrantInstanceId, Mode=OneWay}"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Vagrant Name:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" DataContext="{Binding VagrantInstanceName, Mode=Default}"/>
+            <TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding VagrantInstanceName, Mode=OneWay}"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Location:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" DataContext="{Binding VagrantInstanceLocation, Mode=OneWay}"/>
+            <TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding VagrantInstanceLocation, Mode=OneWay}"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
 			<Button x:Name="ButtonSave" Command="{Binding SaveCommand}" Content="Save" VerticalAlignment="Center" Margin="0,0,5,0"/>

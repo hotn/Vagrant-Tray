@@ -33,7 +33,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     CancelCommand = new RelayCommand(_settingsWindow.Close),
                     CloseCommand = new RelayCommand(_settingsWindow.Close),
-                    OkCommand = new RelayCommand(SaveSettings)
+                    OkCommand = new RelayCommand(SaveSettings),
+                    EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark)
                 };
                 settingsViewModel.PropertyChanged += (sender, args) =>
                 {
@@ -77,6 +78,24 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             var bookmarkViewModel = new BookmarkViewModel(_editingBookmark);
             //TODO: validate settings
+            bookmarkViewModel.SaveCommand = new RelayCommand(() =>
+            {
+                _applicationData.Bookmarks.Add(_editingBookmark);
+                SaveSettings();
+            }, () => true);
+            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close(), () => true);
+
+            _bookmarkWindow.DataContext = bookmarkViewModel;
+
+            _bookmarkWindow.Show();
+            _bookmarkWindow.Activate();
+        }
+
+        private void EditBookmark(BookmarkViewModel bookmarkViewModel)
+        {
+            _bookmarkWindow = new BookmarkSettingsWindow();
+
+            //TODO: validate settings
             bookmarkViewModel.SaveCommand = new RelayCommand(SaveSettings, () => true);
             bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close(), () => true);
 
@@ -88,8 +107,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void SaveSettings()
         {
-            _applicationData.Bookmarks.Add(_editingBookmark);
-
             using (var ms = new MemoryStream())
             {
                 using (var sr = new StreamReader(ms))

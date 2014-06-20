@@ -1,64 +1,64 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ViewModel="clr-namespace:MikeWaltonWeb.VagrantTray.ViewModel" mc:Ignorable="d"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ViewModel="clr-namespace:MikeWaltonWeb.VagrantTray.ViewModel" xmlns:local="clr-namespace:MikeWaltonWeb.VagrantTray.UI" mc:Ignorable="d"
 	x:Class="MikeWaltonWeb.VagrantTray.UI.SettingsWindow"
 	Title="Vagrant Tray Settings"
 	Width="640" Height="480">
 
-	<Window.DataContext>
-		<ViewModel:SettingsViewModel/>
-	</Window.DataContext>
+    <Window.DataContext>
+        <ViewModel:SettingsViewModel/>
+    </Window.DataContext>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<TabControl Margin="10">
-			<TabItem Header="Bookmarks">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="50"/>
-					</Grid.RowDefinitions>
-					<ListView Margin="10" ItemsSource="{Binding Bookmarks}">
-						<ListView.View>
-							<GridView>
-								<GridViewColumn Header="Bookmark Name" DisplayMemberBinding="{Binding BookmarkName, Mode=OneWay}" />
-								<GridViewColumn Header="ID" DisplayMemberBinding="{Binding VagrantInstanceId, Mode=OneWay}" />
-								<GridViewColumn Header="Name" DisplayMemberBinding="{Binding VagrantInstanceName, Mode=OneWay}" />
-								<GridViewColumn Header="Provider" />
-								<GridViewColumn Header="Location" DisplayMemberBinding="{Binding VagrantInstanceLocation, Mode=OneWay}" />
-								<GridViewColumn Header="Actions">
-									<GridViewColumn.CellTemplate>
-										<DataTemplate>
-										<Button Content="Edit" Margin="0" VerticalAlignment="Center" />
-										</DataTemplate>
-									</GridViewColumn.CellTemplate>
-								</GridViewColumn>
-							</GridView>
-						</ListView.View>
-					</ListView>
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="1" VerticalAlignment="Center">
-						<ComboBox x:Name="ComboAddBookmark" SelectedIndex="0" SelectedItem="{Binding AddBookmarkSelectedItem}">
-							<ComboBoxItem Content="Add Bookmark..." IsEnabled="False"/>
-							<ComboBoxItem Content="New Bookmark"/>
-							<ComboBoxItem Content="Import From Vagrant"/>
-						</ComboBox>
-					</StackPanel>
-				</Grid>
-			</TabItem>
-			<TabItem Header="Settings">
-				<Grid>
-					<CheckBox Content="Launch at Windows Startup" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-				</Grid>
-			</TabItem>
-		</TabControl>
-		
-		<StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
-			<Button x:Name="ButtonOk" Command="{Binding OkCommand}" Content="Ok" VerticalAlignment="Center" Margin="0,0,5,0"/>
-			<Button x:Name="ButtonCancel" Command="{Binding CancelCommand}" Content="Cancel" VerticalAlignment="Center" Margin="5,0,0,0"/>
-		</StackPanel>
-	</Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <TabControl Margin="10">
+            <TabItem Header="Bookmarks">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="BookmarkList" Margin="10" ItemsSource="{Binding Bookmarks}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Bookmark Name" DisplayMemberBinding="{Binding BookmarkName, Mode=OneWay}" />
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding VagrantInstanceId, Mode=OneWay}" />
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding VagrantInstanceName, Mode=OneWay}" />
+                                <GridViewColumn Header="Provider" />
+                                <GridViewColumn Header="Location" DisplayMemberBinding="{Binding VagrantInstanceLocation, Mode=OneWay}" />
+                                <GridViewColumn Header="Actions">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Edit" Margin="0" VerticalAlignment="Center" Command="{Binding DataContext.EditBookmarkCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkList}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="1" VerticalAlignment="Center">
+                        <ComboBox x:Name="ComboAddBookmark" SelectedIndex="0" SelectedItem="{Binding AddBookmarkSelectedItem}">
+                            <ComboBoxItem Content="Add Bookmark..." IsEnabled="False"/>
+                            <ComboBoxItem Content="New Bookmark"/>
+                            <ComboBoxItem Content="Import From Vagrant"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid>
+                    <CheckBox Content="Launch at Windows Startup" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="ButtonOk" Command="{Binding OkCommand}" Content="Ok" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <Button x:Name="ButtonCancel" Command="{Binding CancelCommand}" Content="Cancel" VerticalAlignment="Center" Margin="5,0,0,0"/>
+        </StackPanel>
+    </Grid>
 </Window>

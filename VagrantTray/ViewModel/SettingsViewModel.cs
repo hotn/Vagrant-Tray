@@ -126,6 +126,26 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             }
         }
 
+        private RelayCommand<BookmarkViewModel> _editBookmarkCommand;
+
+        public RelayCommand<BookmarkViewModel> EditBookmarkCommand
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    return new RelayCommand<BookmarkViewModel>(b => { }, b => true);
+                }
+
+                return _editBookmarkCommand;
+            }
+            set
+            {
+                _editBookmarkCommand = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private readonly RelayCommand _defaultRelayCommand = new RelayCommand(() => { }, () => true);
     }
 }
