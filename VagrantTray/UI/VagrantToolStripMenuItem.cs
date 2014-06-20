@@ -28,10 +28,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             Icon = icon;
         }
 
-        public VagrantToolStripMenuItem(Bookmark bookmark)
-            : this(
-                bookmark.Name,
-                (MenuItemIcon) Enum.Parse(typeof (MenuItemIcon), bookmark.VagrantInstance.CurrentState.ToString()))
+        public VagrantToolStripMenuItem(Bookmark bookmark) : this(bookmark.Name, MenuItemIcon.Loading)
         {
             bookmark.VagrantInstance.StateChanged += OnVagrantInstanceStateChanged;
         }
