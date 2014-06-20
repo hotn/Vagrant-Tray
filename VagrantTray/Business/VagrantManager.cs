@@ -13,7 +13,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
 {
     public class VagrantManager
     {
-        private VagrantProcess _process;
         private List<string> _outputLines = new List<string>();
 
         private List<VagrantInstance> _instances = new List<VagrantInstance>();
@@ -88,49 +87,61 @@ namespace MikeWaltonWeb.VagrantTray.Business
             foreach (var bookmark in _applicationData.Bookmarks)
             {
                 _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark.VagrantInstance));
+
+                var process = new VagrantStatusProcess(bookmark.VagrantInstance);
+                process.Success += state =>
+                {
+                    bookmark.VagrantInstance.CurrentState = state;
+                    process.Dispose();
+                };
+                process.Start();
+                try
+                {
+                    process.BeginOutputReadLine();
+                }
+                catch (Exception)
+                {
+                }
+
+                process.WaitForExit();
             }
         }
 
-        private Dictionary<VagrantProcess.Command, Action> GetInstanceCommandActions(VagrantInstance instance)
+        private Dictionary<string, Action> GetInstanceCommandActions(VagrantInstance instance)
         {
-            return
+            /*return
                 Enum.GetNames(typeof(VagrantProcess.Command))
                     .ToDictionary(name => (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name),
                         name =>
                             GetActionForVagrantInstanceCommand(instance,
-                                (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name)));
-        }
+                                (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name)));*/
 
-        private void CreateProcess()
-        {
-            if (_process != null)
+            return new Dictionary<string, Action>
             {
-                _process.Close();
-                _process.Dispose();
-            }
-
-            _process = new VagrantProcess();
+                {"Status", (() => { })}
+            };
         }
 
         private void GetGlobalStatus()
         {
-            CreateProcess();
-
-            _process.VagrantCommand = VagrantProcess.Command.GlobalStatus;
-
-            _process.OutputDataReceived += ProcessOnGlobalStatusOutputDataReceived;
-            _process.ErrorDataReceived += ProcessOnErrorDataReceived;
-            _process.Exited += ProcessOnGlobalStatusExited;
-            
-
-            _process.Start();
-
-            try
+            /*using (var process = new VagrantProcess())
             {
-                _process.BeginOutputReadLine();
-            }
-            catch (Exception) { }
-            _process.WaitForExit();
+                process.VagrantCommand = VagrantProcess.Command.GlobalStatus;
+
+                process.OutputDataReceived += ProcessOnGlobalStatusOutputDataReceived;
+                process.ErrorDataReceived += ProcessOnErrorDataReceived;
+                process.Exited += ProcessOnGlobalStatusExited;
+
+
+                process.Start();
+
+                try
+                {
+                    process.BeginOutputReadLine();
+                }
+                catch (Exception) { }
+                process.WaitForExit();
+            }*/
         }
 
         private void ProcessOnGlobalStatusOutputDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
@@ -154,7 +165,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     Id = datalist.ElementAt(0),
                     Name = datalist.ElementAt(1),
                     Provider = datalist.ElementAt(2),
-                    State = datalist.ElementAt(3),
+                    CurrentState = (VagrantInstance.State)Enum.Parse(typeof(VagrantInstance.State), datalist.ElementAt(3)),
                     Directory = datalist.ElementAt(4)
                 });
             }
@@ -203,27 +214,33 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _menu.ShowMessageBalloon(balloonMessage);
         }
 
-        private void RunInstanceCommand(VagrantInstance instance, VagrantProcess.Command command)
+        /*private void RunInstanceCommand(VagrantInstance instance, VagrantProcess.Command command,
+            DataReceivedEventHandler outputDataReceivedAction,
+            DataReceivedEventHandler errorDataReceivedAction,
+            EventHandler exitedAction)
         {
-            CreateProcess();
-
-            _process.Instance = instance;
-            _process.VagrantCommand = command;
-
-            _process.OutputDataReceived += ProcessOnCommandDataReceived;
-            _process.ErrorDataReceived += ProcessOnErrorDataReceived;
-            _process.Exited += ProcessOnCommandExited;
-
-
-            _process.Start();
-            try
+            using (var process = new VagrantProcess())
             {
-                _process.BeginOutputReadLine();
+                process.Instance = instance;
+                process.VagrantCommand = command;
+
+                process.OutputDataReceived += outputDataReceivedAction;
+                process.ErrorDataReceived += errorDataReceivedAction;
+                process.Exited += exitedAction;
+
+
+                process.Start();
+                try
+                {
+                    process.BeginOutputReadLine();
+                }
+                catch (Exception)
+                {
+                }
+
+                process.WaitForExit();
             }
-            catch (Exception) { }
-            
-            _process.WaitForExit();
-        }
+        }*/
 
         private void TerminateApplication()
         {
@@ -238,7 +255,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
             return _instances;
         }
 
-        public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantProcess.Command command)
+        /*public Action GetActionForVagrantInstanceCommand(VagrantInstance instance, VagrantProcess.Command command)
         {
             return () =>
             {
@@ -246,6 +263,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 RunInstanceCommand(instance, command);
                 RunInstanceCommand(instance, VagrantProcess.Command.Status);
             };
-        }
+        }*/
     }
 }

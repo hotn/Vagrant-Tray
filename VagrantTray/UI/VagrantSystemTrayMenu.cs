@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using MikeWaltonWeb.VagrantTray.Business.VagrantExe;
 using MikeWaltonWeb.VagrantTray.Model;
 
 namespace MikeWaltonWeb.VagrantTray.UI
 {
+    [System.ComponentModel.DesignerCategory("Code")]
     public class VagrantSystemTrayMenu : ContextMenuStrip
     {
         public event EventHandler ExitClicked;
@@ -51,28 +51,18 @@ namespace MikeWaltonWeb.VagrantTray.UI
             });
         }
 
-        public void AddBookmarkSubmenu(Bookmark bookmark, Dictionary<VagrantProcess.Command, Action> commandActions)
+        public void AddBookmarkSubmenu(Bookmark bookmark, Dictionary<string, Action> commandActions)
         {
-            var status = MenuItemIcon.Loading;
-            switch (bookmark.VagrantInstance.State)
-            {
-                case "running":
-                    status = MenuItemIcon.Running;
-                    break;
-                case "saved":
-                    status = MenuItemIcon.Saved;
-                    break;
-                case "poweroff":
-                    status = MenuItemIcon.Poweroff;
-                    break;
-            }
+            var submenu = new VagrantToolStripMenuItem(bookmark);
 
-            var submenu = new VagrantToolStripMenuItem(bookmark.Name, status);
+            //Add status menu items.
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.VagrantInstance.Name) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Provider: " + bookmark.VagrantInstance.Provider) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.State) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.CurrentState) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + bookmark.VagrantInstance.Directory) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripSeparator());
+
+            //Add vagrant action menu items.
             foreach (var commandAction in commandActions)
             {
                 Bitmap icon = null;

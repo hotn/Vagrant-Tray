@@ -1,84 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Documents;
 using MikeWaltonWeb.VagrantTray.Model;
 
 namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
 {
-    public class VagrantProcess : Process
+    [System.ComponentModel.DesignerCategory("Code")]
+    public abstract class VagrantProcess : Process
     {
-        private VagrantInstance _instance;
+        protected VagrantInstance Instance;
+        protected List<string> OutputData = new List<string>();
+        protected List<string> ErrorData = new List<string>();
 
-        public VagrantProcess()
+        public VagrantProcess(VagrantInstance instance)
         {
+            Instance = instance;
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "vagrant.exe",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
+                WorkingDirectory = instance.Directory
             };
             
             StartInfo = startInfo;
             EnableRaisingEvents = true;
+
+            OutputDataReceived += OnOutputDataReceived;
+            ErrorDataReceived += OnErrorDataReceived;
+            Exited += OnExited;
         }
 
-        public Command VagrantCommand
+        private void OnOutputDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            set
+            if (dataReceivedEventArgs.Data != null)
             {
-                var args = "";
-
-                switch (value)
-                {
-                    case Command.Up:
-                    case Command.Reload:
-                    case Command.Provision:
-                    case Command.Suspend:
-                    case Command.Resume:
-                    case Command.Halt:
-                    case Command.Destroy:
-                    case Command.Status:
-                        args = value.ToString().ToLower();
-                        break;
-                    case Command.GlobalStatus:
-                        args = "global-status";
-                        break;
-                }
-
-                if (_instance != null)
-                {
-                    args += " " + _instance.Id;
-                }
-
-                StartInfo.Arguments = args;
+                OutputData.Add(dataReceivedEventArgs.Data.Trim());
             }
         }
 
-        public VagrantInstance Instance
+        private void OnErrorDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            get { return _instance; }
-            set
+            if (dataReceivedEventArgs.Data != null)
             {
-                _instance = value;
-                if (!StartInfo.Arguments.Equals(String.Empty))
-                {
-                    StartInfo.Arguments += " " + value.Id;
-                }
+                ErrorData.Add(dataReceivedEventArgs.Data.Trim());
             }
         }
 
-        public enum Command
-        {
-            Up,
-            Reload,
-            Provision,
-            Suspend,
-            Resume,
-            Halt,
-            Destroy,
-            Status,
-            GlobalStatus
-        }
+        protected abstract void OnExited(object sender, EventArgs eventArgs);
     }
 }

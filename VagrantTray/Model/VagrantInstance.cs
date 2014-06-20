@@ -7,6 +7,9 @@ namespace MikeWaltonWeb.VagrantTray.Model
     [XmlRoot(IsNullable = false)]
     public class VagrantInstance
     {
+        private State _currentState;
+        public event EventHandler StateChanged;
+
         [XmlElement]
         public string Id { get; set; }
 
@@ -17,9 +20,28 @@ namespace MikeWaltonWeb.VagrantTray.Model
         public string Provider { get; set; }
 
         [XmlElement]
-        public string State { get; set; }
+        public State CurrentState
+        {
+            get { return _currentState; }
+            set
+            {
+                _currentState = value;
+                if (StateChanged != null)
+                {
+                    StateChanged(this, EventArgs.Empty);
+                }
+            }
+        }
 
         [XmlElement]
         public string Directory { get; set; }
+
+        public enum State
+        {
+            Running,
+            Saved,
+            Poweroff,
+            Loading
+        }
     }
 }

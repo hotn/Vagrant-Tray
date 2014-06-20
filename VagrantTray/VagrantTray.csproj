@@ -73,9 +73,9 @@
     </ApplicationDefinition>
     <Compile Include="Business\SettingsManager.cs" />
     <Compile Include="Business\Utility\Windows\Win32Wrapper.cs" />
-    <Compile Include="Business\VagrantExe\VagrantProcess.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Business\VagrantExe\VagrantProcess.cs" />
+    <Compile Include="Business\VagrantExe\VagrantStatusProcess.cs" />
+    <Compile Include="Business\VagrantExe\VagrantUpProcess.cs" />
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
     <Compile Include="Settings\SavedBookmarksSetting.cs" />
@@ -87,12 +87,8 @@
     </Compile>
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
-    <Compile Include="UI\VagrantSystemTrayMenu.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\VagrantToolStripMenuItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="UI\VagrantSystemTrayMenu.cs" />
+    <Compile Include="UI\VagrantToolStripMenuItem.cs" />
     <Compile Include="ViewModel\BookmarkViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Page Include="UI\BookmarkSettingsWindow.xaml">
