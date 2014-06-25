@@ -23,12 +23,18 @@
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <ListView x:Name="BookmarkList" Margin="10" ItemsSource="{Binding Bookmarks}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="IsSelected" Value="{Binding RelativeSource={RelativeSource Self}, Path=IsKeyboardFocusWithin, Mode=OneWay}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Bookmark Name" DisplayMemberBinding="{Binding BookmarkName, Mode=OneWay}" />
                                 <GridViewColumn Header="ID" DisplayMemberBinding="{Binding VagrantInstanceId, Mode=OneWay}" />
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding VagrantInstanceName, Mode=OneWay}" />
-                                <GridViewColumn Header="Provider" />
+                                <!--<GridViewColumn Header="Provider" />-->
                                 <GridViewColumn Header="Location" DisplayMemberBinding="{Binding VagrantInstanceLocation, Mode=OneWay}" />
                                 <GridViewColumn Header="Actions">
                                     <GridViewColumn.CellTemplate>
