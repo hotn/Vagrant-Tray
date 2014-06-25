@@ -56,8 +56,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             var submenu = new VagrantToolStripMenuItem(bookmark);
 
             //Add status menu items.
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.VagrantInstance.Name) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Provider: " + bookmark.VagrantInstance.Provider) { Enabled = false });
+            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.Name) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.CurrentState) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + bookmark.VagrantInstance.Directory) { Enabled = false });
             submenu.DropDownItems.Add(new ToolStripSeparator());
