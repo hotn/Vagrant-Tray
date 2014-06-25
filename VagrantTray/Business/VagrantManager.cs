@@ -86,7 +86,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             foreach (var bookmark in _applicationData.Bookmarks)
             {
-                _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark.VagrantInstance));
+                _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark));
 
                 var process = new VagrantStatusProcess(bookmark.VagrantInstance);
                 process.Success += state =>
@@ -107,59 +107,127 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
         }
 
-        private Dictionary<string, Action> GetInstanceCommandActions(VagrantInstance instance)
+        private Dictionary<string, Action> GetInstanceCommandActions(Bookmark bookmark)
         {
-            /*return
-                Enum.GetNames(typeof(VagrantProcess.Command))
-                    .ToDictionary(name => (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name),
-                        name =>
-                            GetActionForVagrantInstanceCommand(instance,
-                                (VagrantProcess.Command)Enum.Parse(typeof(VagrantProcess.Command), name)));*/
+            Action<VagrantProcess> useProcess = process =>
+            {
+                process.Start();
+                try
+                {
+                    process.BeginOutputReadLine();
+                }
+                catch (Exception)
+                {
+                }
+
+                process.WaitForExit();
+            };
 
             return new Dictionary<string, Action>
             {
                 {
                     "Status", (() =>
                     {
-                        using (var process = new VagrantStatusProcess(instance))
+                        using (var process = new VagrantStatusProcess(bookmark.VagrantInstance))
                         {
                             process.Success += state =>
                             {
-                                instance.CurrentState = state;
-                                _menu.ShowMessageBalloon(state.ToString());
+                                bookmark.VagrantInstance.CurrentState = state;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
-
-                            process.Start();
-                            try
-                            {
-                                process.BeginOutputReadLine();
-                            }
-                            catch (Exception)
-                            {
-                            }
-
-                            process.WaitForExit();
+                            useProcess(process);
                         }
                     })
                 },
-                 {
+                {
+                    "Up", (() =>
+                    {
+                        using (var process = new VagrantUpProcess(bookmark.VagrantInstance))
+                        {
+                            process.Success += (sender, args) =>
+                            {
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
+
+                            useProcess(process);
+                        }
+                    })
+                },
+                {
+                    "Reload", (() =>
+                    {
+                        using (var process = new VagrantReloadProcess(bookmark.VagrantInstance))
+                        {
+                            process.Success += (sender, args) =>
+                            {
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
+
+                            useProcess(process);
+                        }
+                    })
+                },
+                {
                     "Suspend", (() =>
                     {
-                        using (var process = new VagrantSuspendProcess(instance))
+                        using (var process = new VagrantSuspendProcess(bookmark.VagrantInstance))
                         {
-                            process.Success += (sender, args) => instance.CurrentState = VagrantInstance.State.Saved;
-
-                            process.Start();
-                            try
+                            process.Success += (sender, args) =>
                             {
-                                process.BeginOutputReadLine();
-                            }
-                            catch (Exception)
-                            {
-                            }
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Saved;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
 
-                            process.WaitForExit();
+                            useProcess(process);
+                        }
+                    })
+                },
+                {
+                    "Resume", (() =>
+                    {
+                        using (var process = new VagrantResumeProcess(bookmark.VagrantInstance))
+                        {
+                            process.Success += (sender, args) =>
+                            {
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
+
+                            useProcess(process);
+                        }
+                    })
+                },
+                {
+                    "Halt", (() =>
+                    {
+                        using (var process = new VagrantHaltProcess(bookmark.VagrantInstance))
+                        {
+                            process.Success += (sender, args) =>
+                            {
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
+
+                            useProcess(process);
+                        }
+                    })
+                },
+                {
+                    "Destroy", (() =>
+                    {
+                        using (var process = new VagrantDestroyProcess(bookmark.VagrantInstance))
+                        {
+                            //TODO: this state isn't accurate
+                            process.Success += (sender, args) =>
+                            {
+                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
+                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                            };
+
+                            useProcess(process);
                         }
                     })
                 }
