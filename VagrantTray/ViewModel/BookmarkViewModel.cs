@@ -15,6 +15,7 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
     public class BookmarkViewModel : ViewModelBase
     {
         private readonly Bookmark _bookmark;
+        private RelayCommand<string> _browseCommand;
         private RelayCommand _saveCommand;
         private RelayCommand _cancelCommand;
 
@@ -29,7 +30,14 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
 
                 return _bookmark != null ?_bookmark.Name : String.Empty;
             }
-            //set;
+            set
+            {
+                if (_bookmark != null)
+                {
+                    _bookmark.Name = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public string VagrantInstanceId
@@ -69,12 +77,40 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
 
                 return _bookmark != null ? _bookmark.VagrantInstance.Directory : String.Empty;
             }
+            set
+            {
+                if (_bookmark != null)
+                {
+                    _bookmark.VagrantInstance.Directory = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public bool IsPresent
         {
             get { return Directory.Exists(VagrantInstanceLocation); }
         }
+
+        public RelayCommand<string> BrowseCommand
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    return new RelayCommand<string>(s => { }, s => true);
+                }
+
+                return _browseCommand;
+            }
+            set
+            {
+                _browseCommand = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        
 
         public RelayCommand SaveCommand
         {

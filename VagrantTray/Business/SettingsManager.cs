@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows;
 using System.Windows.Forms;
 using GalaSoft.MvvmLight.Command;
 using MikeWaltonWeb.VagrantTray.Business.Utility.Windows;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
 using MikeWaltonWeb.VagrantTray.ViewModel;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace MikeWaltonWeb.VagrantTray.Business
 {
@@ -33,7 +35,11 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     CancelCommand = new RelayCommand(_settingsWindow.Close),
                     CloseCommand = new RelayCommand(_settingsWindow.Close),
-                    OkCommand = new RelayCommand(SaveSettings),
+                    OkCommand = new RelayCommand(() =>
+                    {
+                        SaveSettings();
+                        _settingsWindow.Close();
+                    }),
                     EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark)
                 };
                 settingsViewModel.PropertyChanged += (sender, args) =>
@@ -52,25 +58,17 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void AddNewBookmark()
         {
-            var winWrapper = new Win32Wrapper(_settingsWindow);
 
-            var folderDialog = new FolderBrowserDialog();
-            folderDialog.ShowNewFolderButton = false;
-            folderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-            folderDialog.Description = "Select Vagrant Folder";
-            if (folderDialog.ShowDialog(winWrapper) == DialogResult.OK)
+
+            var path = ShowVagrantFolderBrowser(_settingsWindow);
+            if (path.Equals(String.Empty))
             {
-                if (!File.Exists(Path.Combine(folderDialog.SelectedPath, "Vagrantfile")))
-                {
-                    MessageBox.Show(winWrapper,
-                        "The folder you have selected is not a valid Vagrant folder. Please try again.");
-                    return;
-                }
+                return;
             }
 
             _editingBookmark = new Bookmark
             {
-                VagrantInstance = new VagrantInstance {Directory = folderDialog.SelectedPath, Name = "Test", Id = "1234"},
+                VagrantInstance = new VagrantInstance {Directory = path, Name = "Test", Id = "1234"},
                 Name = "New Bookmark"
             };
 
@@ -82,8 +80,9 @@ namespace MikeWaltonWeb.VagrantTray.Business
             {
                 _applicationData.Bookmarks.Add(_editingBookmark);
                 SaveSettings();
-            }, () => true);
-            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close(), () => true);
+                _bookmarkWindow.Close();
+            });
+            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close());
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
 
@@ -96,8 +95,21 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _bookmarkWindow = new BookmarkSettingsWindow();
 
             //TODO: validate settings
-            bookmarkViewModel.SaveCommand = new RelayCommand(SaveSettings, () => true);
-            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close(), () => true);
+            bookmarkViewModel.BrowseCommand = new RelayCommand<string>(s =>
+            {
+                var newPath = ShowVagrantFolderBrowser(_bookmarkWindow, s);
+                if (!newPath.Equals(String.Empty))
+                {
+                    //TODO: this setting immediately persists in model, even if it doesn't get saved. Store as a temp value somewhere.
+                    bookmarkViewModel.VagrantInstanceLocation = newPath;
+                }
+            });
+            bookmarkViewModel.SaveCommand = new RelayCommand(() =>
+            {
+                SaveSettings();
+                _bookmarkWindow.Close();
+            });
+            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close());
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
 
@@ -122,5 +134,33 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             Properties.Settings.Default.Save();
         }
+
+        private static string ShowVagrantFolderBrowser(Window parentWindow, string initialPath = "")
+        {
+            var winWrapper = new Win32Wrapper(parentWindow);
+
+            var folderDialog = new FolderBrowserDialog();
+            folderDialog.Description = "Select Vagrant Folder";
+            folderDialog.ShowNewFolderButton = false;
+            folderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+            if (!initialPath.Equals(String.Empty))
+            {
+                folderDialog.SelectedPath = initialPath;
+            }
+
+
+            if (folderDialog.ShowDialog(winWrapper) == DialogResult.OK)
+            {
+                if (!File.Exists(Path.Combine(folderDialog.SelectedPath, "Vagrantfile")))
+                {
+                    MessageBox.Show(winWrapper,
+                        "The folder you have selected is not a valid Vagrant folder. Please try again.");
+                    return String.Empty;
+                }
+            }
+            return folderDialog.SelectedPath;
+        }
+
+        
     }
 }

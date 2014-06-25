@@ -8,6 +8,8 @@ namespace MikeWaltonWeb.VagrantTray.Model
     public class VagrantInstance
     {
         private State _currentState;
+
+        [field:NonSerialized]
         public event EventHandler StateChanged;
 
         [XmlElement]
@@ -19,7 +21,7 @@ namespace MikeWaltonWeb.VagrantTray.Model
         [XmlElement]
         public string Provider { get; set; }
 
-        [XmlElement]
+        [XmlIgnore]
         public State CurrentState
         {
             get { return _currentState; }

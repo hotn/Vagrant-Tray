@@ -13,7 +13,7 @@
 	<StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Bookmark Name:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding BookmarkName, Mode=OneWay}"/>
+			<TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding BookmarkName, Mode=TwoWay}"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Vagrant ID:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -25,8 +25,9 @@
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
 			<Label Content="Location:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,-200,0" Text="{Binding VagrantInstanceLocation, Mode=OneWay}"/>
-		</StackPanel>
+            <TextBox Name="TextLocation" TextWrapping="Wrap" VerticalAlignment="Center" Margin="10,0" Text="{Binding VagrantInstanceLocation, Mode=OneWay}"/>
+            <Button Content="Browse" Command="{Binding BrowseCommand}" CommandParameter="{Binding ElementName=TextLocation, Path=Text}"/>
+        </StackPanel>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
 			<Button x:Name="ButtonSave" Command="{Binding SaveCommand}" Content="Save" VerticalAlignment="Center" Margin="0,0,5,0"/>
 			<Button x:Name="ButtonCancel" Command="{Binding CancelCommand}" Content="Cancel" VerticalAlignment="Center" Margin="5,0,0,0"/>
