@@ -118,7 +118,51 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             return new Dictionary<string, Action>
             {
-                {"Status", (() => { })}
+                {
+                    "Status", (() =>
+                    {
+                        using (var process = new VagrantStatusProcess(instance))
+                        {
+                            process.Success += state =>
+                            {
+                                instance.CurrentState = state;
+                                _menu.ShowMessageBalloon(state.ToString());
+                            };
+
+
+                            process.Start();
+                            try
+                            {
+                                process.BeginOutputReadLine();
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                            process.WaitForExit();
+                        }
+                    })
+                },
+                 {
+                    "Suspend", (() =>
+                    {
+                        using (var process = new VagrantSuspendProcess(instance))
+                        {
+                            process.Success += (sender, args) => instance.CurrentState = VagrantInstance.State.Saved;
+
+                            process.Start();
+                            try
+                            {
+                                process.BeginOutputReadLine();
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                            process.WaitForExit();
+                        }
+                    })
+                }
             };
         }
 
