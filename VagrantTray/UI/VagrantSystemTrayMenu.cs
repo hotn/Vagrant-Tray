@@ -11,6 +11,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
     {
         public event EventHandler ExitClicked;
         public event EventHandler SettingsClicked;
+        public event EventHandler TrayIconClicked;
 
         private NotifyIcon _icon;
 
@@ -30,6 +31,14 @@ namespace MikeWaltonWeb.VagrantTray.UI
             };
 
             AddDefaultMenuItems();
+
+            _icon.Click += (sender, args) =>
+            {
+                if (((MouseEventArgs)args).Button == MouseButtons.Left && TrayIconClicked != null)
+                {
+                    TrayIconClicked(sender, args);
+                }
+            };
         }
 
         private void AddDefaultMenuItems()

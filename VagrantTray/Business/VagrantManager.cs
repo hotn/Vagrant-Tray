@@ -27,6 +27,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private SettingsManager _settingsManager;
 
+        private Dictionary<Bookmark, VagrantProcess> _runningProcesses = new Dictionary<Bookmark, VagrantProcess>();
+
         private VagrantManager()
         {
             Init();
@@ -55,6 +57,22 @@ namespace MikeWaltonWeb.VagrantTray.Business
             //_menu.SettingsClicked += (sender, args) => RebuildList();
             _menu.SettingsClicked += (sender, args) => _settingsManager.ShowSettings();
             _menu.ExitClicked += (sender, args) => TerminateApplication();
+            _menu.TrayIconClicked += (sender, args) =>
+            {
+                var message = String.Empty;
+                if (_runningProcesses.Count == 0)
+                {
+                    message = "No processes running.";
+                }
+                else
+                {
+                    message = "Running processes:" + Environment.NewLine + Environment.NewLine +
+                              String.Join(Environment.NewLine,
+                                  _runningProcesses.Select(p => p.Key.Name + ": " + p.Value.Command));
+                }
+
+                _menu.ShowMessageBalloon(message);
+            };
 
             RebuildList();
         }
@@ -111,6 +129,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             Action<VagrantProcess> useProcess = process =>
             {
+                _runningProcesses[bookmark] = process;
+
+                process.Exited += (sender, args) => _runningProcesses.Remove(bookmark);
+
                 process.Start();
                 try
                 {
@@ -133,7 +155,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += state =>
                             {
                                 bookmark.VagrantInstance.CurrentState = state;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + " current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -148,7 +171,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -163,7 +189,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -178,7 +207,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Saved;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -193,7 +225,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -208,7 +243,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
@@ -224,7 +262,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             process.Success += (sender, args) =>
                             {
                                 bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
-                                _menu.ShowMessageBalloon("Current state for " + bookmark.Name + ": " + bookmark.VagrantInstance.CurrentState.ToString());
+                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender).Command +
+                                                         " complete." + Environment.NewLine + Environment.NewLine +
+                                                         "Current state: " +
+                                                         bookmark.VagrantInstance.CurrentState.ToString());
                             };
 
                             useProcess(process);
