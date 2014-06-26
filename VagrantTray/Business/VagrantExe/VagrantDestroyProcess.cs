@@ -8,9 +8,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
         public event EventHandler Success;
 
         public VagrantDestroyProcess(VagrantInstance instance)
-            : base(instance)
+            : base(instance, Command.Destroy)
         {
-            StartInfo.Arguments = "destroy";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)

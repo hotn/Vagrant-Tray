@@ -7,9 +7,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
     {
         public event EventHandler Success;
 
-        public VagrantUpProcess(VagrantInstance instance) : base(instance)
+        public VagrantUpProcess(VagrantInstance instance) : base(instance, Command.Up)
         {
-            StartInfo.Arguments = "up";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)

@@ -8,9 +8,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
         public event EventHandler Success;
 
         public VagrantReloadProcess(VagrantInstance instance)
-            : base(instance)
+            : base(instance, Command.Reload)
         {
-            StartInfo.Arguments = "reload";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)

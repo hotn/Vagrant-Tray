@@ -11,9 +11,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
         public delegate void OnSuccessHandler(VagrantInstance.State state);
 
         public VagrantStatusProcess(VagrantInstance instance)
-            : base(instance)
+            : base(instance, Command.Status)
         {
-            StartInfo.Arguments = "status";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)

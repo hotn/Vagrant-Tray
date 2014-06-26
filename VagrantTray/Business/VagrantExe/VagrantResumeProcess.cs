@@ -8,9 +8,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
         public event EventHandler Success;
 
         public VagrantResumeProcess(VagrantInstance instance)
-            : base(instance)
+            : base(instance, Command.Resume)
         {
-            StartInfo.Arguments = "resume";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)

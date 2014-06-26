@@ -7,9 +7,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
     {
         public event EventHandler Success;
 
-        public VagrantSuspendProcess(VagrantInstance instance) : base(instance)
+        public VagrantSuspendProcess(VagrantInstance instance) : base(instance, Command.Suspend)
         {
-            StartInfo.Arguments = "suspend";
         }
 
         protected override void OnExited(object sender, EventArgs eventArgs)
