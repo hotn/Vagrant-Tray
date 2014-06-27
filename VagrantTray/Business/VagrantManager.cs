@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.Windows;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe;
 using MikeWaltonWeb.VagrantTray.Model;
@@ -54,7 +56,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             _menu = new VagrantSystemTrayMenu();
 
-            //_menu.SettingsClicked += (sender, args) => RebuildList();
             _menu.SettingsClicked += (sender, args) => _settingsManager.ShowSettings();
             _menu.ExitClicked += (sender, args) => TerminateApplication();
             _menu.TrayIconClicked += (sender, args) =>
@@ -102,10 +103,15 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             _menu.Reset();
 
+            //add each bookmark to the menu
             foreach (var bookmark in _applicationData.Bookmarks)
             {
                 _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark));
+            }
 
+            //refresh the status of each bookmark
+            foreach (var bookmark in _applicationData.Bookmarks)
+            {
                 var process = new VagrantStatusProcess(bookmark.VagrantInstance);
                 process.Success += state =>
                 {
@@ -150,17 +156,23 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     "Status", (() =>
                     {
-                        using (var process = new VagrantStatusProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += state =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = state;
-                                _menu.ShowMessageBalloon(bookmark.Name + " current state: " +
-                                                         bookmark.VagrantInstance.CurrentState.ToString());
-                            };
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantStatusProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += state =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = state;
+                                    _menu.ShowMessageBalloon(bookmark.Name + " current state: " +
+                                                             bookmark.VagrantInstance.CurrentState.ToString());
+                                };
+
+                                useProcess(process);
+                            }
+                        };
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
