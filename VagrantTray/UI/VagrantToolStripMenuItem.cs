@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
+using Timer = System.Timers.Timer;
 
 namespace MikeWaltonWeb.VagrantTray.UI
 {
@@ -79,8 +81,8 @@ namespace MikeWaltonWeb.VagrantTray.UI
                         }
                         Image = _loadingBitmaps[0];
 
-                        _timer = new Timer {Interval = 100};
-                        _timer.Tick += TimerOnTick;
+                        _timer = new Timer(100);
+                        _timer.Elapsed += TimerOnTick;
                         _timer.Start();
                         break;
                 }
@@ -91,7 +93,15 @@ namespace MikeWaltonWeb.VagrantTray.UI
         {
             if (_currentLoadingBitmapIndex < _loadingBitmaps.Length)
             {
-                Image = _loadingBitmaps[_currentLoadingBitmapIndex];
+                try
+                {
+                    Image = _loadingBitmaps[_currentLoadingBitmapIndex];
+                }
+                catch (Exception)
+                {
+                    //For some reason, setting the icon occasionally causes an exception.
+                    //As long as we handle it, we're good since it's not a precision animation in the first place.
+                }
                 _currentLoadingBitmapIndex++;
             }
             else
