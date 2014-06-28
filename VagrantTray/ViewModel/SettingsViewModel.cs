@@ -146,6 +146,26 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             }
         }
 
+        private RelayCommand<BookmarkViewModel> _deleteBookmarkCommand;
+
+        public RelayCommand<BookmarkViewModel> DeleteBookmarkCommand
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    return new RelayCommand<BookmarkViewModel>(b => { }, b => true);
+                }
+
+                return _deleteBookmarkCommand;
+            }
+            set
+            {
+                _deleteBookmarkCommand = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private readonly RelayCommand _defaultRelayCommand = new RelayCommand(() => { }, () => true);
     }
 }

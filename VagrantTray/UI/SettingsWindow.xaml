@@ -39,8 +39,11 @@
                                 <GridViewColumn Header="Actions">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="Edit" Margin="0" VerticalAlignment="Center" Command="{Binding DataContext.EditBookmarkCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkList}" />
-                                        </DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Edit" Margin="0" VerticalAlignment="Center" Command="{Binding DataContext.EditBookmarkCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkList}" />
+                                                <Button Content="Delete" Margin="0" VerticalAlignment="Center" Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkList}" />
+                                            </StackPanel>
+                                            </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>

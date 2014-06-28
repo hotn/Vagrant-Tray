@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Forms;
@@ -40,7 +41,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
                         SaveSettings();
                         _settingsWindow.Close();
                     }),
-                    EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark)
+                    EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark),
+                    DeleteBookmarkCommand = new RelayCommand<BookmarkViewModel>(DeleteBookmark)
                 };
                 settingsViewModel.PropertyChanged += (sender, args) =>
                 {
@@ -115,6 +117,20 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             _bookmarkWindow.Show();
             _bookmarkWindow.Activate();
+        }
+
+        private void DeleteBookmark(BookmarkViewModel bookmarkViewModel)
+        {
+            var result = MessageBox.Show(new Win32Wrapper(_settingsWindow), "Are you sure you want to delete this bookmark?",
+                "Delete Bookmark", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            _applicationData.Bookmarks.Remove(
+                _applicationData.Bookmarks.First(b => b.Name == bookmarkViewModel.BookmarkName));
         }
 
         private void SaveSettings()
