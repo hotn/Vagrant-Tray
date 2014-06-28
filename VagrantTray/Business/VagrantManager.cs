@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -76,6 +77,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
             };
 
             RebuildList();
+
+            _applicationData.Bookmarks.CollectionChanged += (sender, args) => RebuildList();
         }
 
         private void LoadApplicationData()
@@ -85,18 +88,19 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _applicationData.Bookmarks = LoadBookmarks();
         }
 
-        private static List<Bookmark> LoadBookmarks()
+        private static ObservableCollection<Bookmark> LoadBookmarks()
         {
             using (var ms = new MemoryStream(Convert.FromBase64String(Properties.Settings.Default.SavedBookmarks)))
             {
                 if (ms.Length != 0)
                 {
                     var bf = new BinaryFormatter();
-                    return (List<Bookmark>) bf.Deserialize(ms);
+                    //return new ObservableCollection<Bookmark>((List<Bookmark>)bf.Deserialize(ms));
+                    return (ObservableCollection<Bookmark>) bf.Deserialize(ms);
                 }
             }
 
-            return new List<Bookmark>();
+            return new ObservableCollection<Bookmark>();
         }
 
         private void RebuildList()

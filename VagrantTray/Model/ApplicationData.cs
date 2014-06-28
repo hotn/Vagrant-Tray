@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MikeWaltonWeb.VagrantTray.Model
 {
     public class ApplicationData
     {
-        public List<Bookmark> Bookmarks { get; set; } 
+        public ObservableCollection<Bookmark> Bookmarks { get; set; } 
     }
 }

@@ -43,6 +43,13 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
         public SettingsViewModel(ApplicationData applicationData)
         {
             _applicationData = applicationData;
+
+            Init();
+        }
+
+        private void Init()
+        {
+            _applicationData.Bookmarks.CollectionChanged += (sender, args) => RaisePropertyChanged("Bookmarks");
         }
 
         private string _addBookmarkSelectedItem;
