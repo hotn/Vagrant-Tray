@@ -116,22 +116,27 @@ namespace MikeWaltonWeb.VagrantTray.Business
             //refresh the status of each bookmark
             foreach (var bookmark in _applicationData.Bookmarks)
             {
-                var process = new VagrantStatusProcess(bookmark.VagrantInstance);
-                process.Success += state =>
+                var worker = new BackgroundWorker();
+                worker.DoWork += (sender, args) =>
                 {
-                    bookmark.VagrantInstance.CurrentState = state;
-                    process.Dispose();
-                };
-                process.Start();
-                try
-                {
-                    process.BeginOutputReadLine();
-                }
-                catch (Exception)
-                {
-                }
+                    var process = new VagrantStatusProcess(bookmark.VagrantInstance);
+                    process.Success += state =>
+                    {
+                        bookmark.VagrantInstance.CurrentState = state;
+                        process.Dispose();
+                    };
+                    process.Start();
+                    try
+                    {
+                        process.BeginOutputReadLine();
+                    }
+                    catch (Exception)
+                    {
+                    }
 
-                process.WaitForExit();
+                    process.WaitForExit();
+                };
+                worker.RunWorkerAsync();
             }
         }
 
