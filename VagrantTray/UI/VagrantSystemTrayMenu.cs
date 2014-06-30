@@ -63,45 +63,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         public void AddBookmarkSubmenu(Bookmark bookmark, Dictionary<string, Action> commandActions)
         {
-            var submenu = new VagrantToolStripMenuItem(bookmark);
-
-            //Add status menu items.
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.Name) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.CurrentState) { Enabled = false });
-            submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + bookmark.VagrantInstance.Directory) { Enabled = false });
-            submenu.DropDownItems.Add(new ToolStripSeparator());
-
-            //add command prompt option
-            submenu.DropDownItems.Add(new ToolStripMenuItem("Open command prompt", null, (sender, args) =>
-            {
-                var process = new Process();
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    WorkingDirectory = bookmark.VagrantInstance.Directory
-                };
-                process.StartInfo = startInfo;
-                process.Start();
-            }));
-            submenu.DropDownItems.Add(new ToolStripSeparator());
-
-            //Add vagrant action menu items.
-            foreach (var commandAction in commandActions)
-            {
-                Bitmap icon = null;
-                var resource = Properties.Resources.ResourceManager.GetObject(commandAction.Key);
-                if (resource != null)
-                {
-                    icon = Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
-                }
-
-                submenu.DropDownItems.Add(new VagrantToolStripMenuItem(commandAction.Key, icon,
-                    (s, e) =>
-                    {
-                        commandAction.Value.Invoke();
-                    }) {IsActionItem = true});
-            }
-
+            var submenu = new VagrantInstanceSubMenu(bookmark, commandActions);
             Items.Insert(0, submenu);
         }
 

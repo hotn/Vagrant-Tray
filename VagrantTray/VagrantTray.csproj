@@ -93,6 +93,7 @@
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
     <Compile Include="UI\VagrantSystemTrayMenu.cs" />
+    <Compile Include="UI\VagrantInstanceSubMenu.cs" />
     <Compile Include="UI\VagrantToolStripMenuItem.cs" />
     <Compile Include="ViewModel\BookmarkViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
