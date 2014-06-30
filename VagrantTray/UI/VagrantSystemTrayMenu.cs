@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using MikeWaltonWeb.VagrantTray.Model;
@@ -68,6 +69,20 @@ namespace MikeWaltonWeb.VagrantTray.UI
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Name: " + bookmark.Name) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("State: " + bookmark.VagrantInstance.CurrentState) { Enabled = false });
             submenu.DropDownItems.Add(new VagrantToolStripMenuItem("Directory: " + bookmark.VagrantInstance.Directory) { Enabled = false });
+            submenu.DropDownItems.Add(new ToolStripSeparator());
+
+            //add command prompt option
+            submenu.DropDownItems.Add(new ToolStripMenuItem("Open command prompt", null, (sender, args) =>
+            {
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    WorkingDirectory = bookmark.VagrantInstance.Directory
+                };
+                process.StartInfo = startInfo;
+                process.Start();
+            }));
             submenu.DropDownItems.Add(new ToolStripSeparator());
 
             //Add vagrant action menu items.
