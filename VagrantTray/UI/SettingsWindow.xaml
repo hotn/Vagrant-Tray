@@ -50,11 +50,7 @@
                         </ListView.View>
                     </ListView>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.Row="1" VerticalAlignment="Center">
-                        <ComboBox x:Name="ComboAddBookmark" SelectedIndex="0" SelectedItem="{Binding AddBookmarkSelectedItem}">
-                            <ComboBoxItem Content="Add Bookmark..." IsEnabled="False"/>
-                            <ComboBoxItem Content="New Bookmark"/>
-                            <ComboBoxItem Content="Import From Vagrant"/>
-                        </ComboBox>
+                        <Button Content="New Bookmark" Command="{Binding NewBookmarkCommand}"></Button>
                     </StackPanel>
                 </Grid>
             </TabItem>

@@ -42,14 +42,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
                         _settingsWindow.Close();
                     }),
                     EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark),
-                    DeleteBookmarkCommand = new RelayCommand<BookmarkViewModel>(DeleteBookmark)
-                };
-                settingsViewModel.PropertyChanged += (sender, args) =>
-                {
-                    if (args.PropertyName == "AddBookmarkSelectedItem")
-                    {
-                        AddNewBookmark();
-                    }
+                    DeleteBookmarkCommand = new RelayCommand<BookmarkViewModel>(DeleteBookmark),
+                    NewBookmarkCommand = new RelayCommand(AddNewBookmark)
                 };
                 _settingsWindow.DataContext = settingsViewModel;
             }

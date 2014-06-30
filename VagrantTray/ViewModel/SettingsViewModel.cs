@@ -52,27 +52,6 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             _applicationData.Bookmarks.CollectionChanged += (sender, args) => RaisePropertyChanged("Bookmarks");
         }
 
-        private string _addBookmarkSelectedItem;
-
-        public string AddBookmarkSelectedItem
-        {
-            get
-            {
-                if (IsInDesignMode)
-                {
-                    return String.Empty;
-                }
-                return _addBookmarkSelectedItem;
-            }
-            set
-            {
-                _addBookmarkSelectedItem = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        
-
         private RelayCommand _okCommand;
 
         public RelayCommand OkCommand
@@ -129,6 +108,26 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             set
             {
                 _closeCommand = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private RelayCommand _newBookmarkCommand;
+
+        public RelayCommand NewBookmarkCommand
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    return _defaultRelayCommand;
+                }
+
+                return _newBookmarkCommand;
+            }
+            set
+            {
+                _newBookmarkCommand = value;
                 RaisePropertyChanged();
             }
         }
