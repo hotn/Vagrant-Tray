@@ -12,7 +12,7 @@ namespace MikeWaltonWeb.VagrantTray
         {
             base.OnStartup(e);
 
-            VagrantManager.CreateInstance();
+            VagrantManager.CreateInstance(this);
         }
     }
 }
