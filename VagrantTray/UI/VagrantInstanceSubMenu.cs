@@ -70,6 +70,20 @@ namespace MikeWaltonWeb.VagrantTray.UI
                 process.StartInfo = startInfo;
                 process.Start();
             }));
+
+            //add open in explorer option
+            DropDownItems.Add(new ToolStripMenuItem("Open in file explorer", null, (sender, args) =>
+            {
+                var process = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = _bookmark.VagrantInstance.Directory
+                };
+                process.StartInfo = startInfo;
+                process.Start();
+            }));
+
             DropDownItems.Add(new ToolStripSeparator());
 
             //Add vagrant action menu items.
