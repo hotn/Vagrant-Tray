@@ -21,10 +21,11 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
             {Command.Suspend, "suspend"},
             {Command.Resume, "resume"},
             {Command.Halt, "halt"},
-            {Command.Destroy, "destroy"}
+            {Command.Destroy, "destroy"},
+            {Command.Ssh, "ssh"}
         };
 
-        protected VagrantProcess(VagrantInstance instance, Command command)
+        protected VagrantProcess(VagrantInstance instance, Command command, bool showWindow = false)
         {
             Instance = instance;
             _command = command;
@@ -33,19 +34,24 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
             {
                 FileName = "vagrant.exe",
                 Arguments = CommandArguments[command],
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
                 WorkingDirectory = instance.Directory
             };
+
+            if (!showWindow)
+            {
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+                startInfo.UseShellExecute = false;
+                startInfo.CreateNoWindow = true;
+                
+                EnableRaisingEvents = true;
+
+                OutputDataReceived += OnOutputDataReceived;
+                ErrorDataReceived += OnErrorDataReceived;
+                Exited += OnExited;
+            }
             
             StartInfo = startInfo;
-            EnableRaisingEvents = true;
-
-            OutputDataReceived += OnOutputDataReceived;
-            ErrorDataReceived += OnErrorDataReceived;
-            Exited += OnExited;
         }
 
         private void OnOutputDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
@@ -69,7 +75,10 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
             get { return _command; }
         }
 
-        protected abstract void OnExited(object sender, EventArgs eventArgs);
+        protected virtual void OnExited(object sender, EventArgs eventArgs)
+        {
+            //do nothing by default and leave it up to subclasses to override
+        }
     }
 
     public enum Command
@@ -80,6 +89,7 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
         Suspend,
         Resume,
         Halt,
-        Destroy
+        Destroy,
+        Ssh
     }
 }

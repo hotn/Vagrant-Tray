@@ -183,6 +183,21 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     })
                 },
                 {
+                    "SSH", (() =>
+                    {
+                        var worker = new BackgroundWorker();
+
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantSshProcess(bookmark.VagrantInstance))
+                            {
+                                process.Start();
+                            }
+                        };
+                        worker.RunWorkerAsync();
+                    })
+                },
+                {
                     "Up", (() =>
                     {
                         using (var process = new VagrantUpProcess(bookmark.VagrantInstance))

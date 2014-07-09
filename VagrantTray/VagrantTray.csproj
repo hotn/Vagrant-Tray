@@ -80,6 +80,7 @@
     <Compile Include="Business\VagrantExe\VagrantStatusProcess.cs" />
     <Compile Include="Business\VagrantExe\VagrantResumeProcess.cs" />
     <Compile Include="Business\VagrantExe\VagrantSuspendProcess.cs" />
+    <Compile Include="Business\VagrantExe\VagrantSshProcess.cs" />
     <Compile Include="Business\VagrantExe\VagrantUpProcess.cs" />
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
