@@ -75,8 +75,7 @@
                     </StackPanel>
             		<StackPanel Orientation="Horizontal">
             			<Label Content="Shell Application"/>
-            			<ComboBox SelectedIndex="0">
-            				<ComboBoxItem Content="Choose Application" IsSelected="True" IsEnabled="False"/>
+            			<ComboBox SelectedValue="{Binding ShellApplication, Mode=TwoWay}" SelectedValuePath="Tag">
             				<ComboBoxItem Content="Command Prompt" Tag="cmd"/>
             				<ComboBoxItem Content="PowerShell" Tag="powershell"/>
             				<ComboBoxItem Content="Browse..."/>

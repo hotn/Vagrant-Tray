@@ -48,6 +48,16 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             }
         }
 
+        public string ShellApplication
+        {
+            get { return Properties.Settings.Default.ShellApplication; }
+            set
+            {
+                Properties.Settings.Default.ShellApplication = value;
+                RaisePropertyChanged();
+            }
+        }
+
         /// <summary>
         /// This constructor is for design purposes only.
         /// </summary>
