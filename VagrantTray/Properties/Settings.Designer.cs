@@ -34,5 +34,41 @@ namespace MikeWaltonWeb.VagrantTray.Properties {
                 this["SavedBookmarks"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LaunchOnWindowsStartup {
+            get {
+                return ((bool)(this["LaunchOnWindowsStartup"]));
+            }
+            set {
+                this["LaunchOnWindowsStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunAsAdministrator {
+            get {
+                return ((bool)(this["RunAsAdministrator"]));
+            }
+            set {
+                this["RunAsAdministrator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("cmd")]
+        public string ShellApplication {
+            get {
+                return ((string)(this["ShellApplication"]));
+            }
+            set {
+                this["ShellApplication"] = value;
+            }
+        }
     }
 }

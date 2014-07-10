@@ -55,7 +55,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             _menu = new VagrantSystemTrayMenu();
 
-            _menu.SettingsClicked += (sender, args) => _settingsManager.ShowSettings();
+            _menu.SettingsClicked += (sender, args) => _settingsManager.ShowSettingsWindow();
             _menu.ExitClicked += (sender, args) => TerminateApplication();
             _menu.TrayIconClicked += (sender, args) =>
             {

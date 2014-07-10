@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -17,8 +16,6 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
     {
         private readonly ApplicationData _applicationData;
 
-        private bool _hasChanged;
-
         public List<BookmarkViewModel> Bookmarks
         {
             get
@@ -26,6 +23,28 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
                 return _applicationData.Bookmarks != null
                     ? _applicationData.Bookmarks.Select(b => new BookmarkViewModel(b)).ToList()
                     : new List<BookmarkViewModel>();
+            }
+        }
+
+        public bool LaunchOnStartup
+        {
+            get { return Properties.Settings.Default.LaunchOnWindowsStartup; }
+
+            set
+            {
+                Properties.Settings.Default.LaunchOnWindowsStartup = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool RunAsAdministrator
+        {
+            get { return Properties.Settings.Default.RunAsAdministrator; }
+
+            set
+            {
+                Properties.Settings.Default.RunAsAdministrator = value;
+                RaisePropertyChanged();
             }
         }
 

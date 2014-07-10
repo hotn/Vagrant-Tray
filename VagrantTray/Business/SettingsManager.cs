@@ -27,19 +27,26 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _applicationData = applicationData;
         }
 
-        public void ShowSettings()
+        public void ShowSettingsWindow()
         {
             if (_settingsWindow == null)
             {
                 _settingsWindow = new SettingsWindow();
+                
+                var cancelCommand = new RelayCommand(() =>
+                {
+                    Properties.Settings.Default.Reload();
+                    DestroySettingsWindow();
+                });
+
                 var settingsViewModel = new SettingsViewModel(_applicationData)
                 {
-                    CancelCommand = new RelayCommand(_settingsWindow.Close),
-                    CloseCommand = new RelayCommand(_settingsWindow.Close),
+                    CancelCommand = cancelCommand,
+                    CloseCommand = cancelCommand,
                     OkCommand = new RelayCommand(() =>
                     {
                         SaveSettings();
-                        _settingsWindow.Close();
+                        DestroySettingsWindow();
                     }),
                     EditBookmarkCommand = new RelayCommand<BookmarkViewModel>(EditBookmark),
                     DeleteBookmarkCommand = new RelayCommand<BookmarkViewModel>(DeleteBookmark),
@@ -50,6 +57,15 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             _settingsWindow.Show();
             _settingsWindow.Activate();
+        }
+
+        private void DestroySettingsWindow()
+        {
+            if (_settingsWindow != null)
+            {
+                _settingsWindow.Close();
+                _settingsWindow = null;
+            }
         }
 
         private void AddNewBookmark()
