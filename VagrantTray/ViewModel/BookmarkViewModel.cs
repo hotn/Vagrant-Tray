@@ -40,32 +40,6 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
             }
         }
 
-        public string VagrantInstanceId
-        {
-            get
-            {
-                if (IsInDesignMode)
-                {
-                    return "1234abc";
-                }
-
-                return _bookmark != null ? _bookmark.VagrantInstance.Id : String.Empty;
-            }
-        }
-
-        public string VagrantInstanceName
-        {
-            get
-            {
-                if (IsInDesignMode)
-                {
-                    return "Vagrant box";
-                }
-
-                return _bookmark != null ? _bookmark.VagrantInstance.Name : String.Empty;
-            }
-        }
-
         public string VagrantInstanceLocation
         {
             get
