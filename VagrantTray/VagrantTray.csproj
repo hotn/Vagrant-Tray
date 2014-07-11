@@ -73,15 +73,16 @@
     </ApplicationDefinition>
     <Compile Include="Business\SettingsManager.cs" />
     <Compile Include="Business\Utility\Windows\Win32Wrapper.cs" />
-    <Compile Include="Business\VagrantExe\VagrantDestroyProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantReloadProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantHaltProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantStatusProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantResumeProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantSuspendProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantSshProcess.cs" />
-    <Compile Include="Business\VagrantExe\VagrantUpProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantDestroyProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantReloadProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantHaltProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantStatusProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantResumeProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantSuspendProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantSshProcess.cs" />
+    <Compile Include="Business\VagrantExe\Processes\VagrantUpProcess.cs" />
+    <Compile Include="Business\VagrantExe\Shells\ShellCommandFactory.cs" />
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
     <Compile Include="Settings\SavedBookmarksSetting.cs" />

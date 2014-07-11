@@ -59,12 +59,12 @@ namespace MikeWaltonWeb.VagrantTray.UI
             DropDownItems.Add(new ToolStripSeparator());
 
             //add command prompt option
-            DropDownItems.Add(new ToolStripMenuItem("Open command prompt", null, (sender, args) =>
+            DropDownItems.Add(new ToolStripMenuItem("Open shell application", null, (sender, args) =>
             {
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "cmd.exe",
+                    FileName = Properties.Settings.Default.ShellApplication,
                     WorkingDirectory = _bookmark.VagrantInstance.Directory
                 };
                 process.StartInfo = startInfo;

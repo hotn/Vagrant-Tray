@@ -2,7 +2,7 @@
 using System.Linq;
 using MikeWaltonWeb.VagrantTray.Model;
 
-namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
+namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 {
     public class VagrantStatusProcess : VagrantProcess
     {

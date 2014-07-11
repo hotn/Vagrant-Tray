@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using MikeWaltonWeb.VagrantTray.Model;
 
-namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
+namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 {
     [System.ComponentModel.DesignerCategory("Code")]
     public abstract class VagrantProcess : Process
@@ -34,14 +34,14 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
             {
                 FileName = "vagrant.exe",
                 Arguments = CommandArguments[command],
-                WorkingDirectory = instance.Directory
+                WorkingDirectory = instance.Directory,
+                UseShellExecute = false
             };
 
             if (!showWindow)
             {
                 startInfo.RedirectStandardOutput = true;
                 startInfo.RedirectStandardError = true;
-                startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;
                 
                 EnableRaisingEvents = true;

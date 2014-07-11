@@ -1,14 +1,14 @@
 ﻿using System;
 using MikeWaltonWeb.VagrantTray.Model;
 
-namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe
+namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 {
-    public class VagrantResumeProcess : VagrantProcess
+    public class VagrantHaltProcess : VagrantProcess
     {
         public event EventHandler Success;
 
-        public VagrantResumeProcess(VagrantInstance instance)
-            : base(instance, Command.Resume)
+        public VagrantHaltProcess(VagrantInstance instance)
+            : base(instance, Command.Halt)
         {
         }
 
