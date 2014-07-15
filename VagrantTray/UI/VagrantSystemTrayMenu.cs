@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Media;
 using MikeWaltonWeb.VagrantTray.Model;
+using MikeWaltonWeb.VagrantTray.Properties;
+using Timer = System.Timers.Timer;
 
 namespace MikeWaltonWeb.VagrantTray.UI
 {
@@ -15,6 +17,9 @@ namespace MikeWaltonWeb.VagrantTray.UI
         public event EventHandler TrayIconClicked;
 
         private NotifyIcon _icon;
+        private static Bitmap[] _loadingBitmaps;
+        private Timer _timer;
+        private int _currentLoadingBitmapIndex;
 
         public VagrantSystemTrayMenu()
         {
@@ -23,10 +28,12 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         private void Init()
         {
+            InitLoadingIcon();
+
             _icon = new NotifyIcon
             {
                 Text = "Vagrant Tray",
-                Icon = Icon.FromHandle(Properties.Resources.Vagrant.GetHicon()),
+                Icon = Icon.FromHandle(_loadingBitmaps[0].GetHicon()),
                 ContextMenuStrip = this,
                 Visible = true
             };
@@ -61,6 +68,43 @@ namespace MikeWaltonWeb.VagrantTray.UI
             });
         }
 
+        private void TimerOnTick(object sender, EventArgs eventArgs)
+        {
+            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length)
+            {
+                try
+                {
+                    _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
+                }
+                catch (Exception)
+                {
+                    //For some reason, setting the icon occasionally causes an exception.
+                    //As long as we handle it, we're good since it's not a precision animation in the first place.
+                }
+                _currentLoadingBitmapIndex++;
+            }
+            else
+            {
+                _currentLoadingBitmapIndex = 0;
+            }
+        }
+
+        private static void InitLoadingIcon()
+        {
+            var bmp = new Bitmap(Resources.VagrantWorking);
+            // the color from the left bottom pixel will be made transparent
+            bmp.MakeTransparent();
+
+            _loadingBitmaps = new Bitmap[bmp.Width / 32];
+            for (var i = 0; i < _loadingBitmaps.Length; i++)
+            {
+                var rect = new Rectangle(i * 32, 0, 32, 32);
+                var bmp2 = bmp.Clone(rect, bmp.PixelFormat);
+
+                _loadingBitmaps[i] = Icon.FromHandle(bmp2.GetHicon()).ToBitmap();
+            }
+        }
+
         public void AddBookmarkSubmenu(Bookmark bookmark, Dictionary<string, Action> commandActions)
         {
             var submenu = new VagrantInstanceSubMenu(bookmark, commandActions);
@@ -82,6 +126,39 @@ namespace MikeWaltonWeb.VagrantTray.UI
         {
             _icon.BalloonTipText = message;
             _icon.ShowBalloonTip(duration);
+        }
+
+        public void StartWorkingAnimation()
+        {
+            if (_timer == null)
+            {
+                _timer = new Timer(200);
+                _timer.Elapsed += TimerOnTick;
+            }
+            _timer.Start();
+        }
+
+        public void StopWorkingAnimation()
+        {
+            if (_timer == null)
+            {
+                return;
+            }
+
+            _timer.Stop();
+            _currentLoadingBitmapIndex = 0;
+            try
+            {
+                _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
+            }
+            catch (Exception)
+            {
+                //For some reason, setting the icon occasionally causes an exception.
+                //As long as we handle it, we're good since it's not a precision animation in the first place.
+            }
+
+            _timer.Dispose();
+            _timer = null;
         }
 
         protected override void Dispose(bool disposing)

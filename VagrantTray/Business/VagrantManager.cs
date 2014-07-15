@@ -112,16 +112,39 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 _menu.AddBookmarkSubmenu(bookmark, GetInstanceCommandActions(bookmark));
             }
 
-            //refresh the status of each bookmark
-            foreach (var bookmark in _applicationData.Bookmarks)
+            //refresh the status of each underlying vagrant instance
+            _menu.StartWorkingAnimation();
+
+            foreach (var instance in _applicationData.Bookmarks.Select(b => b.VagrantInstance).Distinct(new VagrantInstanceEqualityComparer()))
             {
+                var process = new VagrantStatusProcess(instance);
+
+                var bookmarks =
+                    _applicationData.Bookmarks.Where(
+                        b => new VagrantInstanceEqualityComparer().Equals(b.VagrantInstance, instance)).ToList();
+
+                foreach (var bookmark in bookmarks)
+                {
+                    _runningProcesses[bookmark] = process;
+                }
+
                 var worker = new BackgroundWorker();
                 worker.DoWork += (sender, args) =>
                 {
-                    var process = new VagrantStatusProcess(bookmark.VagrantInstance);
                     process.Success += state =>
                     {
-                        _mainApplication.Dispatcher.Invoke(() => bookmark.VagrantInstance.CurrentState = state);
+                        _mainApplication.Dispatcher.Invoke(() => instance.CurrentState = state);
+
+                        foreach (var bookmark in bookmarks)
+                        {
+                            _runningProcesses.Remove(bookmark);
+                        }
+
+                        if (_runningProcesses.Count == 0)
+                        {
+                            _menu.StopWorkingAnimation();
+                        }
+
                         process.Dispose();
                     };
                     process.Start();
@@ -147,7 +170,17 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
                 _runningProcesses[bookmark] = process;
 
-                process.Exited += (sender, args) => _runningProcesses.Remove(bookmark);
+                _menu.StartWorkingAnimation();
+
+                process.Exited += (sender, args) =>
+                {
+                    _runningProcesses.Remove(bookmark);
+
+                    if (_runningProcesses.Count == 0)
+                    {
+                        _menu.StopWorkingAnimation();
+                    }
+                };
 
                 process.Start();
                 try
