@@ -89,6 +89,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             //Add vagrant action menu items.
             foreach (var commandAction in _commandActions)
             {
+                var action = commandAction.Value;
                 Bitmap icon = null;
                 var resource = Resources.ResourceManager.GetObject(commandAction.Key);
                 if (resource != null)
@@ -97,10 +98,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
                 }
 
                 DropDownItems.Add(new VagrantToolStripMenuItem(commandAction.Key, icon,
-                    (s, e) =>
-                    {
-                        commandAction.Value.Invoke();
-                    }) { IsActionItem = true });
+                    (s, e) => action.Invoke()) { IsActionItem = true });
             }
         }
 
