@@ -143,6 +143,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             Action<VagrantProcess> useProcess = process =>
             {
+                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Loading;
+
                 _runningProcesses[bookmark] = process;
 
                 process.Exited += (sender, args) => _runningProcesses.Remove(bookmark);
