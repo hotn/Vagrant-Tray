@@ -72,6 +72,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Business\SettingsManager.cs" />
+    <Compile Include="Business\Utility\Comparers\BookmarkEqualityComparer.cs" />
+    <Compile Include="Business\Utility\Comparers\VagrantInstanceEqualityComparer.cs" />
     <Compile Include="Business\Utility\Windows\Win32Wrapper.cs" />
     <Compile Include="Business\VagrantExe\Processes\VagrantDestroyProcess.cs" />
     <Compile Include="Business\VagrantExe\Processes\VagrantReloadProcess.cs" />
