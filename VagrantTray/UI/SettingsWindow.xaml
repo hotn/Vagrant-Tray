@@ -40,9 +40,6 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Bookmark Name" DisplayMemberBinding="{Binding BookmarkName, Mode=OneWay}" />
-                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding VagrantInstanceId, Mode=OneWay}" />
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding VagrantInstanceName, Mode=OneWay}" />
-                                <!--<GridViewColumn Header="Provider" />-->
                                 <GridViewColumn Header="Location" DisplayMemberBinding="{Binding VagrantInstanceLocation, Mode=OneWay}" />
                                 <GridViewColumn Header="Actions">
                                     <GridViewColumn.CellTemplate>
