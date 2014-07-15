@@ -156,9 +156,6 @@ namespace MikeWaltonWeb.VagrantTray.UI
                 //For some reason, setting the icon occasionally causes an exception.
                 //As long as we handle it, we're good since it's not a precision animation in the first place.
             }
-
-            _timer.Dispose();
-            _timer = null;
         }
 
         protected override void Dispose(bool disposing)
