@@ -110,7 +110,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
                 (MenuItemIcon)Enum.Parse(typeof(MenuItemIcon), vagrantInstance.CurrentState.ToString());
 
             _nameMenuItem.Text = "Name: " + _bookmark.Name;
-            _stateMenuItem.Text = "State: " + _bookmark.VagrantInstance.CurrentState;
+            _stateMenuItem.Text = "State: " + _bookmark.VagrantInstance.CurrentStateString;
             _directoryMenuItem.Text = "Directory: " + _bookmark.VagrantInstance.Directory;
 
             //Enable menu item click if vagrant is no longer processing.
@@ -144,6 +144,9 @@ namespace MikeWaltonWeb.VagrantTray.UI
                         break;
                     case MenuItemIcon.Poweroff:
                         Image = System.Drawing.Icon.FromHandle(Resources.Red.Handle).ToBitmap();
+                        break;
+                    case MenuItemIcon.NotCreated:
+                        Image = System.Drawing.Icon.FromHandle(Resources.Red_Warning.Handle).ToBitmap();
                         break;
                     case MenuItemIcon.Loading:
                         if (_loadingBitmaps == null)
@@ -222,6 +225,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
         Running,
         Saved,
         Poweroff,
-        Loading
+        Loading,
+        NotCreated
     }
 }

@@ -35,6 +35,15 @@ namespace MikeWaltonWeb.VagrantTray.Model
             }
         }
 
+        [XmlIgnore]
+        public string CurrentStateString
+        {
+            get
+            {
+                return Regex.Replace(CurrentState.ToString(), "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+            }
+        }
+
         [XmlElement]
         public string Directory { get; set; }
 
@@ -43,7 +52,8 @@ namespace MikeWaltonWeb.VagrantTray.Model
             Running,
             Saved,
             Poweroff,
-            Loading
+            Loading,
+            NotCreated
         }
     }
 }

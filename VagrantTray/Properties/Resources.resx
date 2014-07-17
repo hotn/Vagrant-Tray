@@ -139,6 +139,9 @@
   <data name="Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Red.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Red_Warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Red_Warning.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Reload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Reload.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

@@ -23,7 +23,7 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
             {
                 var statusLine = OutputData.SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).First();
                 var statusString = statusLine.Substring(statusLine.IndexOf(' ')).Trim();
-                statusString = statusString.Substring(0, statusString.IndexOf(' ')).Trim();
+                statusString = statusString.Substring(0, statusString.LastIndexOf(' ')).Trim();
 
                 VagrantInstance.State status;
 
@@ -37,6 +37,9 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
                         break;
                     case "saved":
                         status = VagrantInstance.State.Saved;
+                        break;
+                    case "not created":
+                        status = VagrantInstance.State.NotCreated;
                         break;
                     default:
                         status = VagrantInstance.State.Loading;
