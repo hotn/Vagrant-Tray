@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
@@ -13,7 +12,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
     [System.ComponentModel.DesignerCategory("Code")]
     public class VagrantInstanceSubMenu : ToolStripMenuItem
     {
-        private static Bitmap[] _loadingBitmaps;
+        private Bitmap[] _loadingBitmaps;
         private Timer _timer;
         private int _currentLoadingBitmapIndex;
         private readonly Bookmark _bookmark;
@@ -165,7 +164,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
-            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length)
+            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length - 1)
             {
                 try
                 {
@@ -184,7 +183,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             }
         }
 
-        private static void InitLoadingIcon()
+        private void InitLoadingIcon()
         {
             var bmp = new Bitmap(Resources.LoadingStrip);
             // the color from the left bottom pixel will be made transparent

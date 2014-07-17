@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Media;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
 using Timer = System.Timers.Timer;
@@ -17,7 +16,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
         public event EventHandler TrayIconClicked;
 
         private NotifyIcon _icon;
-        private static Bitmap[] _loadingBitmaps;
+        private Bitmap[] _loadingBitmaps;
         private Timer _timer;
         private int _currentLoadingBitmapIndex;
 
@@ -70,17 +69,10 @@ namespace MikeWaltonWeb.VagrantTray.UI
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
-            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length)
+            _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
+
+            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length - 1)
             {
-                try
-                {
-                    _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
-                }
-                catch (Exception)
-                {
-                    //For some reason, setting the icon occasionally causes an exception.
-                    //As long as we handle it, we're good since it's not a precision animation in the first place.
-                }
                 _currentLoadingBitmapIndex++;
             }
             else
@@ -89,7 +81,7 @@ namespace MikeWaltonWeb.VagrantTray.UI
             }
         }
 
-        private static void InitLoadingIcon()
+        private void InitLoadingIcon()
         {
             var bmp = new Bitmap(Resources.VagrantWorking);
             // the color from the left bottom pixel will be made transparent
