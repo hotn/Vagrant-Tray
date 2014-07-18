@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using MikeWaltonWeb.VagrantTray.Business.VagrantExe;
+using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
@@ -110,9 +110,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void LoadApplicationData()
         {
-            _applicationData = new ApplicationData();
-
-            _applicationData.Bookmarks = LoadBookmarks();
+            _applicationData = new ApplicationData {Bookmarks = LoadBookmarks()};
         }
 
         private static ObservableCollection<Bookmark> LoadBookmarks()
@@ -122,8 +120,22 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 if (ms.Length != 0)
                 {
                     var bf = new BinaryFormatter();
-                    //return new ObservableCollection<Bookmark>((List<Bookmark>)bf.Deserialize(ms));
-                    return (ObservableCollection<Bookmark>) bf.Deserialize(ms);
+                    var bookmarks = (ObservableCollection<Bookmark>) bf.Deserialize(ms);
+
+                    //unify underlying vagrant instances so there are no duplicates
+                    var instances =
+                        bookmarks.Select(b => b.VagrantInstance)
+                            .Distinct(new VagrantInstanceEqualityComparer())
+                            .ToList();
+
+                    foreach (var bookmark in bookmarks)
+                    {
+                        bookmark.VagrantInstance =
+                            instances.First(
+                                v => new VagrantInstanceEqualityComparer().Equals(v, bookmark.VagrantInstance));
+                    }
+
+                    return bookmarks;
                 }
             }
 
