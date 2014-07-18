@@ -97,9 +97,9 @@
     </Compile>
     <Compile Include="Model\VagrantInstance.cs" />
     <Compile Include="Business\VagrantManager.cs" />
-    <Compile Include="UI\VagrantSystemTrayMenu.cs" />
-    <Compile Include="UI\VagrantInstanceSubMenu.cs" />
-    <Compile Include="UI\VagrantToolStripMenuItem.cs" />
+    <Compile Include="UI\Tray\VagrantSystemTrayMenu.cs" />
+    <Compile Include="UI\Tray\VagrantInstanceSubMenu.cs" />
+    <Compile Include="UI\Tray\VagrantToolStripMenuItem.cs" />
     <Compile Include="ViewModel\BookmarkViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Page Include="UI\BookmarkSettingsWindow.xaml">

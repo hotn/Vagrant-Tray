@@ -10,6 +10,7 @@ using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
+using MikeWaltonWeb.VagrantTray.UI.Tray;
 
 namespace MikeWaltonWeb.VagrantTray.Business
 {

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MikeWaltonWeb.VagrantTray.UI
+namespace MikeWaltonWeb.VagrantTray.UI.Tray
 {
     [System.ComponentModel.DesignerCategory("Code")]
     public class VagrantToolStripMenuItem : ToolStripMenuItem

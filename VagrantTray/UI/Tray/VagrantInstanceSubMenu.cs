@@ -7,7 +7,7 @@ using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
 using Timer = System.Timers.Timer;
 
-namespace MikeWaltonWeb.VagrantTray.UI
+namespace MikeWaltonWeb.VagrantTray.UI.Tray
 {
     [System.ComponentModel.DesignerCategory("Code")]
     public class VagrantInstanceSubMenu : ToolStripMenuItem
