@@ -50,6 +50,11 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
                 ErrorDataReceived += OnErrorDataReceived;
                 Exited += OnExited;
             }
+
+            if (Properties.Settings.Default.RunAsAdministrator)
+            {
+                startInfo.Verb = "runas";
+            }
             
             StartInfo = startInfo;
         }
