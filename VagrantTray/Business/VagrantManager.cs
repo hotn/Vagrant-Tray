@@ -154,7 +154,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
 
             //refresh the status of each underlying vagrant instance
-            _menu.StartWorkingAnimation();
+            if (_applicationData.Bookmarks.Count > 0)
+            {
+                _menu.StartWorkingAnimation();
+            }
 
             foreach (var instance in _applicationData.Bookmarks.Select(b => b.VagrantInstance).Distinct(new VagrantInstanceEqualityComparer()))
             {
