@@ -87,6 +87,7 @@
     <Compile Include="Business\VagrantExe\Shells\ShellCommandFactory.cs" />
     <Compile Include="Model\ApplicationData.cs" />
     <Compile Include="Model\Bookmark.cs" />
+    <Compile Include="Model\ICloneable.cs" />
     <Compile Include="Settings\SavedBookmarksSetting.cs" />
     <Compile Include="UI\BookmarkSettingsWindow.xaml.cs">
       <DependentUpon>BookmarkSettingsWindow.xaml</DependentUpon>

@@ -1,25 +1,17 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace MikeWaltonWeb.VagrantTray.Model
 {
     [Serializable]
     [XmlRoot(IsNullable = false)]
-    public class VagrantInstance
+    public class VagrantInstance : ICloneable<VagrantInstance>
     {
         private State _currentState;
 
         [field:NonSerialized]
         public event EventHandler StateChanged;
-
-        [XmlElement]
-        public string Id { get; set; }
-
-        [XmlElement]
-        public string Name { get; set; }
-
-        [XmlElement]
-        public string Provider { get; set; }
 
         [XmlIgnore]
         public State CurrentState
@@ -54,6 +46,26 @@ namespace MikeWaltonWeb.VagrantTray.Model
             Poweroff,
             Loading,
             NotCreated
+        }
+
+        public VagrantInstance Clone()
+        {
+            return new VagrantInstance {CurrentState = CurrentState, Directory = Directory};
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj.GetType() == GetType()))
+            {
+                return false;
+            }
+
+            return Directory == ((VagrantInstance) obj).Directory;
+        }
+
+        public override int GetHashCode()
+        {
+            return Directory.GetHashCode();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Forms;
 using GalaSoft.MvvmLight.Command;
+using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.Utility.Windows;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.UI;
@@ -18,13 +20,31 @@ namespace MikeWaltonWeb.VagrantTray.Business
         private SettingsWindow _settingsWindow;
         private BookmarkSettingsWindow _bookmarkWindow;
 
+        /// <summary>
+        /// Application data used by main application.
+        /// </summary>
         private readonly ApplicationData _applicationData;
 
-        private Bookmark _editingBookmark;
+        /// <summary>
+        /// Application data that is manipulated during settings changes
+        /// </summary>
+        private ApplicationData _tempApplicationData;
 
         public SettingsManager(ApplicationData applicationData)
         {
             _applicationData = applicationData;
+            ResetSettings();
+        }
+
+        private void ResetSettings()
+        {
+            _tempApplicationData = new ApplicationData
+            {
+                Bookmarks =
+                    new ObservableCollection<Bookmark>(
+                        _applicationData.Bookmarks.Select(
+                            b => b.Clone()))
+            };
         }
 
         public void ShowSettingsWindow()
@@ -37,9 +57,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     Properties.Settings.Default.Reload();
                     DestroySettingsWindow();
+                    ResetSettings();
                 });
 
-                var settingsViewModel = new SettingsViewModel(_applicationData)
+                var settingsViewModel = new SettingsViewModel(_tempApplicationData)
                 {
                     CancelCommand = cancelCommand,
                     CloseCommand = cancelCommand,
@@ -78,23 +99,30 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 return;
             }
 
-            _editingBookmark = new Bookmark
+            //See if we can reuse another vagrant instance, since multiple bookmarks might share the same vagrant instance.
+            var matchingBookmark =
+                _applicationData.Bookmarks.FirstOrDefault(b => b.VagrantInstance.Directory.Equals(path));
+
+            var newBookmark = new Bookmark
             {
-                VagrantInstance = new VagrantInstance {Directory = path, Name = "Test", Id = "1234"},
-                Name = "New Bookmark"
+                VagrantInstance =
+                    matchingBookmark != null
+                        ? matchingBookmark.VagrantInstance
+                        : new VagrantInstance {Directory = path},
+                Name = Directory.GetParent(path).Name
             };
 
             _bookmarkWindow = new BookmarkSettingsWindow();
 
-            var bookmarkViewModel = new BookmarkViewModel(_editingBookmark);
-            //TODO: validate settings
-            bookmarkViewModel.SaveCommand = new RelayCommand(() =>
+            var bookmarkViewModel = new BookmarkViewModel(newBookmark)
             {
-                _applicationData.Bookmarks.Add(_editingBookmark);
-                SaveSettings();
-                _bookmarkWindow.Close();
-            });
-            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close());
+                SaveCommand = new RelayCommand(() =>
+                {
+                    _tempApplicationData.Bookmarks.Add(newBookmark);
+                    _bookmarkWindow.Close();
+                }),
+                CancelCommand = new RelayCommand(() => _bookmarkWindow.Close())
+            };
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
 
@@ -118,10 +146,13 @@ namespace MikeWaltonWeb.VagrantTray.Business
             });
             bookmarkViewModel.SaveCommand = new RelayCommand(() =>
             {
-                SaveSettings();
                 _bookmarkWindow.Close();
             });
-            bookmarkViewModel.CancelCommand = new RelayCommand(() => _bookmarkWindow.Close());
+            bookmarkViewModel.CancelCommand = new RelayCommand(() =>
+            {
+                //TODO: reset the bookmark
+                _bookmarkWindow.Close();
+            });
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
 
@@ -139,26 +170,39 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 return;
             }
 
-            _applicationData.Bookmarks.Remove(
-                _applicationData.Bookmarks.First(b => b.Name == bookmarkViewModel.BookmarkName));
+            _tempApplicationData.Bookmarks.Remove(
+                _tempApplicationData.Bookmarks.First(b => b.Name == bookmarkViewModel.BookmarkName));
         }
 
         private void SaveSettings()
         {
             using (var ms = new MemoryStream())
             {
-                using (var sr = new StreamReader(ms))
-                {
-                    var bf = new BinaryFormatter();
-                    bf.Serialize(ms, _applicationData.Bookmarks);
-                    ms.Position = 0;
-                    var buffer = new byte[(int)ms.Length];
-                    ms.Read(buffer, 0, buffer.Length);
-                    Properties.Settings.Default.SavedBookmarks = Convert.ToBase64String(buffer);
-                }
+                var bf = new BinaryFormatter();
+                bf.Serialize(ms, _tempApplicationData.Bookmarks);
+                ms.Position = 0;
+                var buffer = new byte[(int)ms.Length];
+                ms.Read(buffer, 0, buffer.Length);
+                Properties.Settings.Default.SavedBookmarks = Convert.ToBase64String(buffer);
             }
 
             Properties.Settings.Default.Save();
+
+            var newBookmarks =
+                _tempApplicationData.Bookmarks.Where(
+                    b => !_applicationData.Bookmarks.Contains(b, new BookmarkEqualityComparer())).ToList();
+            var removedBookmarks =
+                _applicationData.Bookmarks.Where(
+                    b => !_tempApplicationData.Bookmarks.Contains(b, new BookmarkEqualityComparer())).ToList();
+
+            foreach (var removedBookmark in removedBookmarks)
+            {
+                _applicationData.Bookmarks.Remove(removedBookmark);
+            }
+            foreach (var newBookmark in newBookmarks)
+            {
+                _applicationData.Bookmarks.Add(newBookmark);
+            }
         }
 
         private static string ShowVagrantFolderBrowser(Window parentWindow, string initialPath = "")
@@ -186,7 +230,5 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
             return folderDialog.SelectedPath;
         }
-
-        
     }
 }
