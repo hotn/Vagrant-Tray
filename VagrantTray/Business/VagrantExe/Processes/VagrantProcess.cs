@@ -9,8 +9,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
     public abstract class VagrantProcess : Process
     {
         protected VagrantInstance Instance;
-        protected List<string> OutputData = new List<string>();
-        protected List<string> ErrorData = new List<string>();
+        private List<string> _outputData;
+        private List<string> _errorData;
         private readonly Command _command;
 
         private static readonly Dictionary<Command, string> CommandArguments = new Dictionary<Command, string>
@@ -29,6 +29,9 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
         {
             Instance = instance;
             _command = command;
+
+            _outputData = new List<string>();
+            _errorData = new List<string>();
 
             var startInfo = new ProcessStartInfo
             {
@@ -79,6 +82,16 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
         {
             get { return _command; }
         }
+
+        public List<string> OutputData
+        {
+            get { return _outputData; }
+        }
+
+        public List<string> ErrorData
+        {
+            get { return _errorData; }
+        } 
 
         protected virtual void OnExited(object sender, EventArgs eventArgs)
         {

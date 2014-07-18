@@ -114,10 +114,44 @@ namespace MikeWaltonWeb.VagrantTray.UI
         /// </summary>
         /// <param name="message">Message to show.</param>
         /// <param name="duration">Duration in milliseconds to show message.</param>
-        public void ShowMessageBalloon(string message, int duration = 1000)
+        public void ShowMessageBalloon(string message, int duration)
+        {
+            ShowMessageBalloon(message, null, duration);
+        }
+
+        public void ShowMessageBalloon(string message)
+        {
+            ShowMessageBalloon(message, 1000);
+        }
+
+        public void ShowMessageBalloon(string message, Action clickAction)
+        {
+            ShowMessageBalloon(message, clickAction, 1000);
+        }
+
+        public void ShowMessageBalloon(string message, Action clickAction, int duration)
         {
             _icon.BalloonTipText = message;
             _icon.ShowBalloonTip(duration);
+
+            if (clickAction != null)
+            {
+                EventHandler clickHandler = null;
+                clickHandler = (sender, args) =>
+                {
+                    _icon.BalloonTipClicked -= clickHandler;
+                    clickAction();
+                };
+                _icon.BalloonTipClicked += clickHandler;
+
+                EventHandler removeHandler = null;
+                removeHandler = (sender, args) =>
+                {
+                    _icon.BalloonTipClosed -= removeHandler;
+                    _icon.BalloonTipClicked -= clickHandler;
+                };
+                _icon.BalloonTipClosed += removeHandler;
+            }
         }
 
         public void StartWorkingAnimation()

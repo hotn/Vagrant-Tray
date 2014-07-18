@@ -60,19 +60,47 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _menu.ExitClicked += (sender, args) => TerminateApplication();
             _menu.TrayIconClicked += (sender, args) =>
             {
-                var message = String.Empty;
+                string message;
                 if (_runningProcesses.Count == 0)
                 {
                     message = "No processes running.";
+                    _menu.ShowMessageBalloon(message);
                 }
                 else
                 {
                     message = "Running processes:" + Environment.NewLine + Environment.NewLine +
                               String.Join(Environment.NewLine,
-                                  _runningProcesses.Select(p => p.Key.Name + ": " + p.Value.Command));
-                }
+                                  _runningProcesses.Select(p => p.Key.Name + ": " + p.Value.Command)) +
+                              Environment.NewLine + Environment.NewLine + "Click for full output popup.";
 
-                _menu.ShowMessageBalloon(message);
+                    _menu.ShowMessageBalloon(message, () =>
+                    {
+                        var clickMessage = "";
+
+                        foreach (var runningProcess in _runningProcesses)
+                        {
+                            clickMessage += runningProcess.Key.Name + ": " + runningProcess.Value.Command +
+                                            Environment.NewLine + Environment.NewLine;
+
+                            if (runningProcess.Value.ErrorData.Count > 0)
+                            {
+                                clickMessage += String.Join(Environment.NewLine, runningProcess.Value.ErrorData);
+                            }
+                            else
+                            {
+                                clickMessage += String.Join(Environment.NewLine, runningProcess.Value.OutputData);
+                            }
+
+                            if (_runningProcesses.Count > 1 && !runningProcess.Equals(_runningProcesses.Last()))
+                            {
+                                clickMessage += Environment.NewLine + "-------------------------------" +
+                                                Environment.NewLine;
+                            }
+                        }
+
+                        MessageBox.Show(clickMessage, "Vagrant Tray Full Output");
+                    });
+                }
             };
 
             RebuildList();
