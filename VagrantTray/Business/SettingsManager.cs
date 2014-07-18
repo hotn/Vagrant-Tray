@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Forms;
@@ -187,6 +188,42 @@ namespace MikeWaltonWeb.VagrantTray.Business
             }
 
             Properties.Settings.Default.Save();
+
+            const string shortcutName = "VagrantTray.lnk";
+            var startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            var startupShortcut = Path.Combine(startupPath, shortcutName);
+            
+            if (Properties.Settings.Default.LaunchOnWindowsStartup)
+            {
+                if (!File.Exists(startupShortcut))
+                {
+                    var t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8")); //Windows Script Host Shell Object
+                    dynamic shell = Activator.CreateInstance(t);
+                    try
+                    {
+                        var lnk = shell.CreateShortcut(startupShortcut);
+                        try
+                        {
+                            lnk.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                            //lnk.WorkingDirectory = startupPath;
+                            lnk.IconLocation = "shell32.dll, 1";
+                            lnk.Save();
+                        }
+                        finally
+                        {
+                            Marshal.FinalReleaseComObject(lnk);
+                        }
+                    }
+                    finally
+                    {
+                        Marshal.FinalReleaseComObject(shell);
+                    }
+                }
+            }
+            else if (File.Exists(startupShortcut))
+            {
+                File.Delete(startupShortcut);
+            }
 
             var newBookmarks =
                 _tempApplicationData.Bookmarks.Where(
