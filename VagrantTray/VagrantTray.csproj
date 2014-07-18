@@ -37,6 +37,9 @@
   <PropertyGroup>
     <StartupObject>MikeWaltonWeb.VagrantTray.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Vagrant.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.4.4.32.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
@@ -188,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Red_Warning.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Vagrant.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
