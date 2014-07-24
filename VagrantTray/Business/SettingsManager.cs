@@ -133,26 +133,29 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void EditBookmark(BookmarkViewModel bookmarkViewModel)
         {
+            var bookmarkClone =
+                _tempApplicationData.Bookmarks.First(b => b.Name.Equals(bookmarkViewModel.BookmarkName)).Clone();
+            var viewModelCopy = new BookmarkViewModel(bookmarkClone);
             _bookmarkWindow = new BookmarkSettingsWindow();
 
             //TODO: validate settings
-            bookmarkViewModel.BrowseCommand = new RelayCommand<string>(s =>
+            viewModelCopy.BrowseCommand = new RelayCommand<string>(s =>
             {
                 var newPath = ShowVagrantFolderBrowser(_bookmarkWindow, s);
                 if (!newPath.Equals(String.Empty))
                 {
-                    //TODO: this setting immediately persists in model, even if it doesn't get saved. Store as a temp value somewhere.
-                    bookmarkViewModel.VagrantInstanceLocation = newPath;
+                    viewModelCopy.VagrantInstanceLocation = newPath;
                 }
             });
-            bookmarkViewModel.SaveCommand = new RelayCommand(DestroyBookmarkWindow);
-            bookmarkViewModel.CancelCommand = new RelayCommand(() =>
+            viewModelCopy.SaveCommand = new RelayCommand(() =>
             {
-                //TODO: reset the bookmark
+                bookmarkViewModel.BookmarkName = viewModelCopy.BookmarkName;
+                bookmarkViewModel.VagrantInstanceLocation = viewModelCopy.VagrantInstanceLocation;
                 DestroyBookmarkWindow();
             });
+            viewModelCopy.CancelCommand = new RelayCommand(DestroyBookmarkWindow);
 
-            _bookmarkWindow.DataContext = bookmarkViewModel;
+            _bookmarkWindow.DataContext = viewModelCopy;
 
             _bookmarkWindow.Show();
             _bookmarkWindow.Activate();
