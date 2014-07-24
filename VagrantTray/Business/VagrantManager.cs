@@ -216,6 +216,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
                 _menu.StartWorkingAnimation();
 
+                process.Start();
                 process.Exited += (sender, args) =>
                 {
                     _runningProcesses.Remove(bookmark);
@@ -226,7 +227,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     }
                 };
 
-                process.Start();
                 try
                 {
                     process.BeginOutputReadLine();
@@ -280,110 +280,152 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     "Up", (() =>
                     {
-                        using (var process = new VagrantUpProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantUpProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+                        
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
                     "Reload", (() =>
                     {
-                        using (var process = new VagrantReloadProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantReloadProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+                        
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
                     "Suspend", (() =>
                     {
-                        using (var process = new VagrantSuspendProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Saved;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantSuspendProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Saved;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess)sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+                        
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
                     "Resume", (() =>
                     {
-                        using (var process = new VagrantResumeProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantResumeProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Running;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
                     "Halt", (() =>
                     {
-                        using (var process = new VagrantHaltProcess(bookmark.VagrantInstance))
-                        {
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantHaltProcess(bookmark.VagrantInstance))
+                            {
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+                        
+                        worker.RunWorkerAsync();
                     })
                 },
                 {
                     "Destroy", (() =>
                     {
-                        using (var process = new VagrantDestroyProcess(bookmark.VagrantInstance))
-                        {
-                            //TODO: this state isn't accurate
-                            process.Success += (sender, args) => _mainApplication.Dispatcher.Invoke(() =>
-                            {
-                                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
-                                _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender).Command +
-                                                         " complete." + Environment.NewLine + Environment.NewLine +
-                                                         "Current state: " +
-                                                         bookmark.VagrantInstance.CurrentState);
-                            });
+                        var worker = new BackgroundWorker();
 
-                            useProcess(process);
-                        }
+                        worker.DoWork += (sender, args) =>
+                        {
+                            using (var process = new VagrantDestroyProcess(bookmark.VagrantInstance))
+                            {
+                                //TODO: this state isn't accurate
+                                process.Success += (sender2, args2) => _mainApplication.Dispatcher.Invoke(() =>
+                                {
+                                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Poweroff;
+                                    _menu.ShowMessageBalloon(bookmark.Name + ": " + ((VagrantProcess) sender2).Command +
+                                                             " complete." + Environment.NewLine + Environment.NewLine +
+                                                             "Current state: " +
+                                                             bookmark.VagrantInstance.CurrentState);
+                                });
+
+                                useProcess(process);
+                            }
+                        };
+
+                        worker.RunWorkerAsync();
                     })
                 }
             };
