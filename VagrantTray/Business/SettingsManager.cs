@@ -120,9 +120,9 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 SaveCommand = new RelayCommand(() =>
                 {
                     _tempApplicationData.Bookmarks.Add(newBookmark);
-                    _bookmarkWindow.Close();
+                    DestroyBookmarkWindow();
                 }),
-                CancelCommand = new RelayCommand(() => _bookmarkWindow.Close())
+                CancelCommand = new RelayCommand(DestroyBookmarkWindow)
             };
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
@@ -145,20 +145,26 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     bookmarkViewModel.VagrantInstanceLocation = newPath;
                 }
             });
-            bookmarkViewModel.SaveCommand = new RelayCommand(() =>
-            {
-                _bookmarkWindow.Close();
-            });
+            bookmarkViewModel.SaveCommand = new RelayCommand(DestroyBookmarkWindow);
             bookmarkViewModel.CancelCommand = new RelayCommand(() =>
             {
                 //TODO: reset the bookmark
-                _bookmarkWindow.Close();
+                DestroyBookmarkWindow();
             });
 
             _bookmarkWindow.DataContext = bookmarkViewModel;
 
             _bookmarkWindow.Show();
             _bookmarkWindow.Activate();
+        }
+
+        private void DestroyBookmarkWindow()
+        {
+            if (_bookmarkWindow != null)
+            {
+                _bookmarkWindow.Close();
+                _bookmarkWindow = null;
+            }
         }
 
         private void DeleteBookmark(BookmarkViewModel bookmarkViewModel)
@@ -205,7 +211,6 @@ namespace MikeWaltonWeb.VagrantTray.Business
                         try
                         {
                             lnk.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                            //lnk.WorkingDirectory = startupPath;
                             lnk.IconLocation = "shell32.dll, 1";
                             lnk.Save();
                         }
