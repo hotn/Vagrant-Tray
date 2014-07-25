@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
+using AutoUpdaterDotNET;
 using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
@@ -52,6 +53,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private void Init()
         {
+            CheckForUpdates();
+
             LoadApplicationData();
 
             _settingsManager = new SettingsManager(_applicationData);
@@ -108,6 +111,11 @@ namespace MikeWaltonWeb.VagrantTray.Business
             RebuildList();
 
             _applicationData.Bookmarks.CollectionChanged += (sender, args) => RebuildList();
+        }
+
+        private static void CheckForUpdates()
+        {
+            AutoUpdater.Start("http://www.mikewaltonweb.com/vagranttray/vagranttrayappcast.xml");
         }
 
         private void LoadApplicationData()
