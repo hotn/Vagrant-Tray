@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -11,7 +10,6 @@ using AutoUpdaterDotNET;
 using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
-using MikeWaltonWeb.VagrantTray.UI;
 using MikeWaltonWeb.VagrantTray.UI.Tray;
 
 namespace MikeWaltonWeb.VagrantTray.Business
@@ -54,6 +52,8 @@ namespace MikeWaltonWeb.VagrantTray.Business
         private void Init()
         {
             CheckForUpdates();
+
+            CheckForSettingsUpgrades();
 
             LoadApplicationData();
 
@@ -116,6 +116,16 @@ namespace MikeWaltonWeb.VagrantTray.Business
         private static void CheckForUpdates()
         {
             AutoUpdater.Start("http://www.mikewaltonweb.com/vagranttray/vagranttrayappcast.xml");
+        }
+
+        private static void CheckForSettingsUpgrades()
+        {
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void LoadApplicationData()
