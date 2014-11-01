@@ -21,6 +21,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
         private VagrantToolStripMenuItem _nameMenuItem;
         private VagrantToolStripMenuItem _stateMenuItem;
         private VagrantToolStripMenuItem _directoryMenuItem;
+        private List<VagrantToolStripMenuItem> _vagrantCommandMenuItems; 
 
         public VagrantInstanceSubMenu(Bookmark bookmark, Dictionary<string, Action> commandActions)
             : base(bookmark.Name)
@@ -33,9 +34,9 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
 
         private void Init()
         {
-            Icon = MenuItemIcon.Loading;
-
             BuildSubMenuItems();
+
+            Icon = MenuItemIcon.Loading;
             
             _bookmark.VagrantInstance.StateChanged += OnVagrantInstanceStateChanged;
         }
@@ -86,6 +87,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
             DropDownItems.Add(new ToolStripSeparator());
 
             //Add vagrant action menu items.
+            _vagrantCommandMenuItems = new List<VagrantToolStripMenuItem>();
             foreach (var commandAction in _commandActions)
             {
                 var action = commandAction.Value;
@@ -96,8 +98,12 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
                     icon = System.Drawing.Icon.FromHandle(((Icon)resource).Handle).ToBitmap();
                 }
 
-                DropDownItems.Add(new VagrantToolStripMenuItem(commandAction.Key, icon,
-                    (s, e) => action.Invoke()) { IsActionItem = true });
+                var menuItem = new VagrantToolStripMenuItem(commandAction.Key, icon,
+                    (s, e) => action.Invoke()) {IsActionItem = true};
+
+                DropDownItems.Add(menuItem);
+
+                _vagrantCommandMenuItems.Add(menuItem);
             }
         }
 
@@ -133,6 +139,8 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
                     _timer.Dispose();
                 }
 
+                var vagrantCommandsEnabled = true;
+
                 switch (value)
                 {
                     case MenuItemIcon.Running:
@@ -157,7 +165,16 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
                         _timer = new Timer(100);
                         _timer.Elapsed += TimerOnTick;
                         _timer.Start();
+
+                        vagrantCommandsEnabled = false;
+
                         break;
+                }
+
+                //toggle whether commands can be run
+                foreach (var vagrantToolStripMenuItem in _vagrantCommandMenuItems)
+                {
+                    vagrantToolStripMenuItem.Enabled = vagrantCommandsEnabled;
                 }
             }
         }

@@ -229,8 +229,11 @@ namespace MikeWaltonWeb.VagrantTray.Business
         {
             Action<VagrantProcess> useProcess = process =>
             {
-                bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Loading;
-
+                _mainApplication.Dispatcher.Invoke(() =>
+                {
+                    bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Loading;
+                });
+                
                 _runningProcesses[bookmark] = process;
 
                 _menu.StartWorkingAnimation();
