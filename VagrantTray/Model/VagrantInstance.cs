@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 
 namespace MikeWaltonWeb.VagrantTray.Model
 {
@@ -38,6 +39,8 @@ namespace MikeWaltonWeb.VagrantTray.Model
 
         [XmlElement]
         public string Directory { get; set; }
+
+        public VagrantProcess CurrentProcess { get; set; }
 
         public enum State
         {

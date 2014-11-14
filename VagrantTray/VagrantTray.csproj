@@ -110,6 +110,9 @@
     <Compile Include="UI\BookmarkSettingsWindow.xaml.cs">
       <DependentUpon>BookmarkSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ProcessesWindow.xaml.cs">
+      <DependentUpon>ProcessesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,7 @@
     <Compile Include="UI\Tray\VagrantInstanceSubMenu.cs" />
     <Compile Include="UI\Tray\VagrantToolStripMenuItem.cs" />
     <Compile Include="ViewModel\BookmarkViewModel.cs" />
+    <Compile Include="ViewModel\ProcessesViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Page Include="UI\BookmarkSettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -128,6 +132,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\ProcessesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -7,10 +7,14 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using AutoUpdaterDotNET;
+using GalaSoft.MvvmLight.Command;
 using MikeWaltonWeb.VagrantTray.Business.Utility.Comparers;
 using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
+using MikeWaltonWeb.VagrantTray.Properties;
+using MikeWaltonWeb.VagrantTray.UI;
 using MikeWaltonWeb.VagrantTray.UI.Tray;
+using MikeWaltonWeb.VagrantTray.ViewModel;
 
 namespace MikeWaltonWeb.VagrantTray.Business
 {
@@ -28,7 +32,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private SettingsManager _settingsManager;
 
-        private readonly Dictionary<Bookmark, VagrantProcess> _runningProcesses = new Dictionary<Bookmark, VagrantProcess>();
+        private ProcessesWindow _processesWindow;
 
         private VagrantManager(App mainApplication)
         {
@@ -66,7 +70,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
             _menu.TrayIconClicked += (sender, args) =>
             {
                 string message;
-                if (_runningProcesses.Count == 0)
+                if (_applicationData.Bookmarks.Select(b => b.VagrantInstance).Count(i => i.CurrentProcess != null) == 0)
                 {
                     message = "No processes running.";
                     _menu.ShowMessageBalloon(message);
@@ -75,35 +79,23 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 {
                     message = "Running processes:" + Environment.NewLine + Environment.NewLine +
                               String.Join(Environment.NewLine,
-                                  _runningProcesses.Select(p => p.Key.Name + ": " + p.Value.Command)) +
+                                  _applicationData.Bookmarks.Where(b => b.VagrantInstance.CurrentProcess != null).Select(b => b.Name + ": " + b.VagrantInstance.CurrentProcess.Command)) +
                               Environment.NewLine + Environment.NewLine + "Click for full output popup.";
 
                     _menu.ShowMessageBalloon(message, () =>
                     {
-                        var clickMessage = "";
-
-                        foreach (var runningProcess in _runningProcesses)
+                        if (_processesWindow == null)
                         {
-                            clickMessage += runningProcess.Key.Name + ": " + runningProcess.Value.Command +
-                                            Environment.NewLine + Environment.NewLine;
-
-                            if (runningProcess.Value.ErrorData.Count > 0)
+                            _processesWindow = new ProcessesWindow
                             {
-                                clickMessage += String.Join(Environment.NewLine, runningProcess.Value.ErrorData);
-                            }
-                            else
-                            {
-                                clickMessage += String.Join(Environment.NewLine, runningProcess.Value.OutputData);
-                            }
-
-                            if (_runningProcesses.Count > 1 && !runningProcess.Equals(_runningProcesses.Last()))
-                            {
-                                clickMessage += Environment.NewLine + "-------------------------------" +
-                                                Environment.NewLine;
-                            }
+                                DataContext = new ProcessesViewModel(_applicationData)
+                                {
+                                    CloseCommand = new RelayCommand(() => _processesWindow.Close())
+                                }
+                            };
                         }
 
-                        MessageBox.Show(clickMessage, "Vagrant Tray Full Output");
+                        _processesWindow.Show();
                     });
                 }
             };
@@ -115,7 +107,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
         private static void CheckForUpdates()
         {
-            AutoUpdater.Start("http://www.mikewaltonweb.com/vagranttray/vagranttrayappcast.xml");
+            AutoUpdater.Start(Resources.UpdatesURL);
         }
 
         private static void CheckForSettingsUpgrades()
@@ -188,7 +180,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
                 foreach (var bookmark in bookmarks)
                 {
-                    _runningProcesses[bookmark] = process;
+                    bookmark.VagrantInstance.CurrentProcess = process;
                 }
 
                 var worker = new BackgroundWorker();
@@ -200,10 +192,10 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
                         foreach (var bookmark in bookmarks)
                         {
-                            _runningProcesses.Remove(bookmark);
+                            bookmark.VagrantInstance.CurrentProcess = null;
                         }
 
-                        if (_runningProcesses.Count == 0)
+                        if (_applicationData.Bookmarks.Select(b => b.VagrantInstance).Count(i => i.CurrentProcess != null) == 0)
                         {
                             _menu.StopWorkingAnimation();
                         }
@@ -234,16 +226,16 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     bookmark.VagrantInstance.CurrentState = VagrantInstance.State.Loading;
                 });
                 
-                _runningProcesses[bookmark] = process;
+                bookmark.VagrantInstance.CurrentProcess = process;
 
                 _menu.StartWorkingAnimation();
 
                 process.Start();
                 process.Exited += (sender, args) =>
                 {
-                    _runningProcesses.Remove(bookmark);
+                    bookmark.VagrantInstance.CurrentProcess = null;
 
-                    if (_runningProcesses.Count == 0)
+                    if (_applicationData.Bookmarks.Select(b => b.VagrantInstance).Count(i => i.CurrentProcess != null) == 0)
                     {
                         _menu.StopWorkingAnimation();
                     }
