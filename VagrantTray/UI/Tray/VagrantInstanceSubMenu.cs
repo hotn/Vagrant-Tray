@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using MikeWaltonWeb.VagrantTray.Model;
 using MikeWaltonWeb.VagrantTray.Properties;
@@ -69,6 +71,11 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
                 };
                 process.StartInfo = startInfo;
                 process.Start();
+                Thread.Sleep(50);
+
+                var icon = Resources.VagrantIcon;
+                SendMessage(process.MainWindowHandle, WM_SETICON, ICON_BIG, icon.Handle);
+                SendMessage(process.MainWindowHandle, WM_SETICON, ICON_SMALL, icon.Handle);
             }));
 
             //add open in explorer option
@@ -234,6 +241,13 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
                 _timer.Dispose();
             }
         }
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hwnd, int message, int wParam, IntPtr lParam);
+
+        private const int WM_SETICON = 0x80;
+        private const int ICON_SMALL = 0;
+        private const int ICON_BIG = 1;
     }
 
     public enum MenuItemIcon
