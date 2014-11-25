@@ -181,6 +181,15 @@ namespace MikeWaltonWeb.VagrantTray.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://www.mikewaltonweb.com/vagranttray/vagranttrayappcast.xml.
+        /// </summary>
+        internal static string UpdatesURL {
+            get {
+                return ResourceManager.GetString("UpdatesURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Vagrant {

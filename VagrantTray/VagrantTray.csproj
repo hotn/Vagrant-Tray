@@ -205,7 +205,11 @@
   <ItemGroup>
     <None Include="Resources\Vagrant.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Deploy\vagranttrayappcast.xml">
+      <SubType>Designer</SubType>
+    </Resource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\LoadingStrip.gif" />
   </ItemGroup>
