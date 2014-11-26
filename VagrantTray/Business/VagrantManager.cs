@@ -90,7 +90,7 @@ namespace MikeWaltonWeb.VagrantTray.Business
                             {
                                 DataContext = new ProcessesViewModel(_applicationData)
                                 {
-                                    CloseCommand = new RelayCommand(() => _processesWindow.Close())
+                                    CloseCommand = new RelayCommand(() => _processesWindow.Hide())
                                 }
                             };
                         }
