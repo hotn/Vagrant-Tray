@@ -29,5 +29,10 @@ namespace MikeWaltonWeb.VagrantTray.Model
 
             return newBookmark.Name == Name && newBookmark.VagrantInstance.Equals(VagrantInstance);
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() + VagrantInstance.GetHashCode();
+        }
     }
 }

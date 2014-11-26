@@ -11,6 +11,9 @@ namespace MikeWaltonWeb.VagrantTray.Model
     {
         private State _currentState;
 
+        [NonSerialized]
+        private VagrantProcess _currentProcess;
+
         [field:NonSerialized]
         public event EventHandler StateChanged;
 
@@ -40,7 +43,11 @@ namespace MikeWaltonWeb.VagrantTray.Model
         [XmlElement]
         public string Directory { get; set; }
 
-        public VagrantProcess CurrentProcess { get; set; }
+        public VagrantProcess CurrentProcess
+        {
+            get { return _currentProcess; }
+            set { _currentProcess = value; }
+        }
 
         public enum State
         {
@@ -53,7 +60,7 @@ namespace MikeWaltonWeb.VagrantTray.Model
 
         public VagrantInstance Clone()
         {
-            return new VagrantInstance {CurrentState = CurrentState, Directory = Directory};
+            return new VagrantInstance {CurrentState = CurrentState, Directory = Directory, CurrentProcess = CurrentProcess};
         }
 
         public override bool Equals(object obj)
