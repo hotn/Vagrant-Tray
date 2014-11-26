@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes;
 using MikeWaltonWeb.VagrantTray.Model;
 
 namespace MikeWaltonWeb.VagrantTray.ViewModel
@@ -62,16 +63,41 @@ namespace MikeWaltonWeb.VagrantTray.ViewModel
                 {
                     _selectedBookmark.VagrantInstance.CurrentProcess.OutputDataReceived -=
                         CurrentProcessOnOutputDataReceived;
+                    
+                    //TODO: need to build a better interface for this since it excludes the event delegate type for Status process.
+                    if (_selectedBookmark.VagrantInstance.CurrentProcess is IVagrantEventProcess)
+                    {
+                        ((IVagrantEventProcess) _selectedBookmark.VagrantInstance.CurrentProcess).Success -=
+                            CurrentProcessOnSuccess;
+                    }
                 }
 
                 _selectedBookmark = _applicationData.Bookmarks.First(b => b.Name == value);
-                _selectedBookmark.VagrantInstance.CurrentProcess.OutputDataReceived += CurrentProcessOnOutputDataReceived;
+
+                if (_selectedBookmark.VagrantInstance.CurrentProcess != null)
+                {
+                    _selectedBookmark.VagrantInstance.CurrentProcess.OutputDataReceived +=
+                        CurrentProcessOnOutputDataReceived;
+
+                    //TODO: need to build a better interface for this since it excludes the event delegate type for Status process.
+                    if (_selectedBookmark.VagrantInstance.CurrentProcess is IVagrantEventProcess)
+                    {
+                        ((IVagrantEventProcess)_selectedBookmark.VagrantInstance.CurrentProcess).Success +=
+                            CurrentProcessOnSuccess;
+                    }
+                }
+
                 RaisePropertyChanged();
                 RaisePropertyChanged("BookmarkProcessOutput");
             }
         }
 
         private void CurrentProcessOnOutputDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
+        {
+            RaisePropertyChanged("BookmarkProcessOutput");
+        }
+
+        private void CurrentProcessOnSuccess(object sender, EventArgs args)
         {
             RaisePropertyChanged("BookmarkProcessOutput");
         }
