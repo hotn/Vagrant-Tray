@@ -21,7 +21,7 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 
             if (Success != null)
             {
-                var statusLine = OutputData.SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).First();
+                var statusLine = OutputData.ToList().SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).First();
                 var statusString = statusLine.Substring(statusLine.IndexOf(' ')).Trim();
                 statusString = statusString.Substring(0, statusString.LastIndexOf(' ')).Trim();
 
