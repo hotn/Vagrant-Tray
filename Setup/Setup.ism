@@ -2324,7 +2324,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Default Configuration</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Default Configuration</td><td>SetupFileName</td><td>setup</td></row>
+		<row><td>Default Configuration</td><td>SetupFileName</td><td>VagrantTraySetup</td></row>
 	</table>
 
 	<table name="ISRelease">
@@ -2409,6 +2409,7 @@
 		<col key="yes" def="s72">ISProductConfiguration_</col>
 		<col key="yes" def="s72">Name</col>
 		<col def="s0">Value</col>
+		<row><td>Release</td><td>Default Configuration</td><td>SetupIcon</td><td>&lt;VSSolutionFolder&gt;\VagrantTray\Resources\VagrantConfigure.ico,0</td></row>
 	</table>
 
 	<table name="ISReleasePublishInfo">
@@ -2618,7 +2619,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>Your Company Name</td><td>0</td><td/><td>1789059243</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>Mike Walton</td><td>0</td><td/><td>-1818065105</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>1789059243</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>1789059243</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>The operating system is not adequate for running [ProductName].</td><td>0</td><td/><td>1789059243</td></row>
@@ -3829,7 +3830,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;VSSolutionFolder&gt;\VagrantTray\Resources\VagrantConfigure.ico</td><td>0</td></row>
 		<row><td>NewShortcut1_0C5D3E7BCE0F428BB2710236AE38EC2D.exe</td><td/><td>&lt;VSSolutionFolder&gt;\VagrantTray\bin\Release\VagrantTray.exe</td><td>0</td></row>
 		<row><td>_4B494C2FBD2340DCAD96CB30B47D50D9.exe</td><td/><td>C:\Projects\Visual Studio\VagrantTray\VagrantTray\bin\Release\VagrantTray.exe</td><td>0</td></row>
 	</table>
