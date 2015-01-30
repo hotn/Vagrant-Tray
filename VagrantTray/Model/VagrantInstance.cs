@@ -51,6 +51,7 @@ namespace MikeWaltonWeb.VagrantTray.Model
 
         public enum State
         {
+            Unknown,
             Running,
             Saved,
             Poweroff,

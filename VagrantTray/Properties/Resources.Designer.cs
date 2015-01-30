@@ -133,6 +133,16 @@ namespace MikeWaltonWeb.VagrantTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Red_Question {
+            get {
+                object obj = ResourceManager.GetObject("Red_Question", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Red_Warning {
             get {
                 object obj = ResourceManager.GetObject("Red_Warning", resourceCulture);

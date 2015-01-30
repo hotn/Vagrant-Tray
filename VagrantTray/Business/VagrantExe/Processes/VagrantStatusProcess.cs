@@ -21,8 +21,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 
             if (Success != null)
             {
-                var statusLine = OutputData.ToList().SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).First();
-                var statusString = statusLine.Substring(statusLine.IndexOf(' ')).Trim();
+                var statusLine = OutputData.ToList().SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).FirstOrDefault();
+                var statusString = statusLine != null ? statusLine.Substring(statusLine.IndexOf(' ')).Trim() : "";
                 statusString = statusString.Substring(0, statusString.LastIndexOf(' ')).Trim();
 
                 VagrantInstance.State status;
@@ -42,11 +42,11 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
                         status = VagrantInstance.State.NotCreated;
                         break;
                     default:
-                        status = VagrantInstance.State.Loading;
+                        //TODO: It seems we do sometimes make it here when OnExited() gets called before OutputData has completely processed. Perhaps add a slight delay for OutputData to finish populating?
+                        //Shouldn't ever make it here.
+                        status = VagrantInstance.State.Unknown;
                         break;
                 }
-
-                //var status = (VagrantInstance.State) Enum.Parse(typeof (VagrantInstance.State), statusString);
 
                 Success(status);
             }

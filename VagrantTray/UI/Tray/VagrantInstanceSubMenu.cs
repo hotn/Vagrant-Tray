@@ -150,6 +150,9 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
 
                 switch (value)
                 {
+                    case MenuItemIcon.Unknown:
+                        Image = System.Drawing.Icon.FromHandle(Resources.Red_Question.Handle).ToBitmap();
+                        break;
                     case MenuItemIcon.Running:
                         Image = System.Drawing.Icon.FromHandle(Resources.Green.Handle).ToBitmap();
                         break;
@@ -252,6 +255,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
 
     public enum MenuItemIcon
     {
+        Unknown,
         Running,
         Saved,
         Poweroff,
