@@ -77,21 +77,30 @@ namespace MikeWaltonWeb.VagrantTray.Business
                 }
                 else
                 {
+                    var activeBookmarks = _applicationData.Bookmarks.Where(b => b.VagrantInstance.CurrentProcess != null).ToList();
+
                     message = "Running processes:" + Environment.NewLine + Environment.NewLine +
                               String.Join(Environment.NewLine,
-                                  _applicationData.Bookmarks.Where(b => b.VagrantInstance.CurrentProcess != null).Select(b => b.Name + ": " + b.VagrantInstance.CurrentProcess.Command)) +
+                                  activeBookmarks.Select(b => b.Name + ": " + b.VagrantInstance.CurrentProcess.Command)) +
                               Environment.NewLine + Environment.NewLine + "Click for full output popup.";
 
                     _menu.ShowMessageBalloon(message, () =>
                     {
                         if (_processesWindow == null)
                         {
+                            var viewModel = new ProcessesViewModel(_applicationData)
+                            {
+                                CloseCommand = new RelayCommand(() => _processesWindow.Hide())
+                            };
+
+                            if (activeBookmarks.Any())
+                            {
+                                viewModel.SelectedBookmark = activeBookmarks.First().Name;
+                            }
+
                             _processesWindow = new ProcessesWindow
                             {
-                                DataContext = new ProcessesViewModel(_applicationData)
-                                {
-                                    CloseCommand = new RelayCommand(() => _processesWindow.Hide())
-                                }
+                                DataContext = viewModel
                             };
                         }
 
