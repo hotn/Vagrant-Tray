@@ -15,12 +15,17 @@
                     <li>Auto-start with Windows</li>
                     <li>Run as Administrator</li>
                     <li>System tray statuses and commands</li>
+                    <li>Processes output window</li>
+                    <li>Automatic error reporting</li>
                 </ul>
             </li>
             <li>
                 <h2>Changes</h2>
                 <ul>
                     <li>Button style improvement</li>
+                    <li>Better control of concurrently running multiple processes</li>
+                    <li>Show active bookmark process when opening processes output window</li>
+                    <li>Default to "Unknown" Vagrant status to clarify if any issues occur when determining status</li>
                 </ul>
             </li>
             <li>
@@ -29,6 +34,7 @@
                     <li>Bookmark settings window wasn't being properly destroyed upon closing</li>
                     <li>Certain processes ran on wrong thread, locking UI</li>
                     <li>Custom user settings would get discarded upon upgrading</li>
+                    <li>Failure to properly read Vagrant status resulted in application crash</li>
                 </ul>
             </li>
         </ul>
