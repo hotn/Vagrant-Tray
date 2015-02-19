@@ -16,7 +16,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
         public event EventHandler TrayIconClicked;
 
         private NotifyIcon _icon;
-        private Bitmap[] _loadingBitmaps;
+        private IntPtr[] _loadingBitmapHandles;
         private Timer _timer;
         private int _currentLoadingBitmapIndex;
 
@@ -32,7 +32,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
             _icon = new NotifyIcon
             {
                 Text = "Vagrant Tray",
-                Icon = Icon.FromHandle(_loadingBitmaps[0].GetHicon()),
+                Icon = Icon.FromHandle(_loadingBitmapHandles[0]),
                 ContextMenuStrip = this,
                 Visible = true
             };
@@ -69,9 +69,9 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
-            _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
+            _icon.Icon = Icon.FromHandle(_loadingBitmapHandles[_currentLoadingBitmapIndex]);
 
-            if (_currentLoadingBitmapIndex < _loadingBitmaps.Length - 1)
+            if (_currentLoadingBitmapIndex < _loadingBitmapHandles.Length - 1)
             {
                 _currentLoadingBitmapIndex++;
             }
@@ -87,13 +87,13 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
             // the color from the left bottom pixel will be made transparent
             bmp.MakeTransparent();
 
-            _loadingBitmaps = new Bitmap[bmp.Width / 32];
-            for (var i = 0; i < _loadingBitmaps.Length; i++)
+            _loadingBitmapHandles = new IntPtr[bmp.Width / 32];
+            for (var i = 0; i < _loadingBitmapHandles.Length; i++)
             {
                 var rect = new Rectangle(i * 32, 0, 32, 32);
                 var bmp2 = bmp.Clone(rect, bmp.PixelFormat);
 
-                _loadingBitmaps[i] = Icon.FromHandle(bmp2.GetHicon()).ToBitmap();
+                _loadingBitmapHandles[i] = bmp2.GetHicon();
             }
         }
 
@@ -175,7 +175,7 @@ namespace MikeWaltonWeb.VagrantTray.UI.Tray
             _currentLoadingBitmapIndex = 0;
             try
             {
-                _icon.Icon = Icon.FromHandle(_loadingBitmaps[_currentLoadingBitmapIndex].GetHicon());
+                _icon.Icon = Icon.FromHandle(_loadingBitmapHandles[_currentLoadingBitmapIndex]);
             }
             catch (Exception)
             {
