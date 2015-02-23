@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VagrantTray", "VagrantTray\VagrantTray.csproj", "{F39D9553-72ED-4032-AD30-AAF4731E23D8}"
 EndProject
 Project("{E729F059-12D4-455F-A2A4-FDA8DD25E08A}") = "Setup", "Setup\Setup.isproj", "{07F4DE88-5E3D-4471-9C76-3F76A20E5EC1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F39D9553-72ED-4032-AD30-AAF4731E23D8} = {F39D9553-72ED-4032-AD30-AAF4731E23D8}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92E952B4-D16B-47A9-A96D-0497D0EDEC32}"
+	ProjectSection(SolutionItems) = preProject
+		GPL2EULA.rtf = GPL2EULA.rtf
 	EndProjectSection
 EndProject
 Global
