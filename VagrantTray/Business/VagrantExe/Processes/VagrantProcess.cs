@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using MikeWaltonWeb.VagrantTray.Model;
 
@@ -9,8 +8,8 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
     public abstract class VagrantProcess : Process
     {
         protected VagrantInstance Instance;
-        private List<string> _outputData;
-        private List<string> _errorData;
+        private readonly List<string> _outputData;
+        private readonly List<string> _errorData;
         private readonly Command _command;
 
         private static readonly Dictionary<Command, string> CommandArguments = new Dictionary<Command, string>
@@ -51,7 +50,6 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 
                 OutputDataReceived += OnOutputDataReceived;
                 ErrorDataReceived += OnErrorDataReceived;
-                Exited += OnExited;
             }
 
             if (Properties.Settings.Default.RunAsAdministrator)
@@ -64,17 +62,24 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
 
         private void OnOutputDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            if (dataReceivedEventArgs.Data != null)
-            {
-                OutputData.Add(dataReceivedEventArgs.Data.Trim());
-            }
+            HandleDataReceived(dataReceivedEventArgs.Data, false);
         }
 
         private void OnErrorDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            if (dataReceivedEventArgs.Data != null)
+            HandleDataReceived(dataReceivedEventArgs.Data, true);
+        }
+
+        private void HandleDataReceived(string data, bool isErrorData)
+        {
+            if (data != null)
             {
-                ErrorData.Add(dataReceivedEventArgs.Data.Trim());
+                var destination = isErrorData ? ErrorData : OutputData;
+                destination.Add(data.Trim());
+            }
+            else
+            {
+                CompleteProcess(isErrorData);
             }
         }
 
@@ -93,7 +98,11 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
             get { return _errorData; }
         } 
 
-        protected virtual void OnExited(object sender, EventArgs eventArgs)
+        /// <summary>
+        /// Do actions that depend on the process execution being complete.
+        /// </summary>
+        /// <param name="errorOccurred">Whether or not the process experienced errors during execution.</param>
+        protected virtual void CompleteProcess(bool errorOccurred)
         {
             //do nothing by default and leave it up to subclasses to override
         }

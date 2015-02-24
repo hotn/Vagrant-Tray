@@ -13,11 +13,13 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
         {
         }
 
-        protected override void OnExited(object sender, EventArgs eventArgs)
+        protected override void CompleteProcess(bool errorOccurred)
         {
-            //TODO: announce errors
-
-            if (Success != null)
+            if (errorOccurred && Fail != null)
+            {
+                Fail(this, EventArgs.Empty);
+            }
+            else if (Success != null)
             {
                 Success(this, EventArgs.Empty);
             }

@@ -7,6 +7,7 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
     public class VagrantStatusProcess : VagrantProcess
     {
         public event OnSuccessHandler Success;
+        public event EventHandler Fail;
 
         public delegate void OnSuccessHandler(VagrantInstance.State state);
 
@@ -15,11 +16,13 @@ namespace MikeWaltonWeb.VagrantTray.Business.VagrantExe.Processes
         {
         }
 
-        protected override void OnExited(object sender, EventArgs eventArgs)
+        protected override void CompleteProcess(bool errorOccurred)
         {
-            //TODO: announce errors
-
-            if (Success != null)
+            if (errorOccurred && Fail != null)
+            {
+                Fail(this, EventArgs.Empty);
+            }
+            else if (Success != null)
             {
                 var statusLine = OutputData.ToList().SkipWhile(l => !l.Trim().Equals(String.Empty)).Skip(1).FirstOrDefault();
                 var statusString = statusLine != null ? statusLine.Substring(statusLine.IndexOf(' ')).Trim() : "";
