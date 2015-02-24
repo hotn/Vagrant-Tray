@@ -192,37 +192,41 @@ namespace MikeWaltonWeb.VagrantTray.Business
                     bookmark.VagrantInstance.CurrentProcess = process;
                 }
 
-                var worker = new BackgroundWorker();
-                worker.DoWork += (sender, args) =>
+                using (var worker = new BackgroundWorker())
                 {
-                    process.Success += state =>
+                    worker.DoWork += (sender, args) =>
                     {
-                        _mainApplication.Dispatcher.Invoke(() => instance.CurrentState = state);
-
-                        foreach (var bookmark in bookmarks)
+                        process.Success += state =>
                         {
-                            bookmark.VagrantInstance.CurrentProcess = null;
+                            _mainApplication.Dispatcher.Invoke(() => instance.CurrentState = state);
+
+                            foreach (var bookmark in bookmarks)
+                            {
+                                bookmark.VagrantInstance.CurrentProcess = null;
+                            }
+
+                            if (
+                                _applicationData.Bookmarks.Select(b => b.VagrantInstance)
+                                    .Count(i => i.CurrentProcess != null) == 0)
+                            {
+                                _menu.StopWorkingAnimation();
+                            }
+
+                            process.Dispose();
+                        };
+                        process.Start();
+                        try
+                        {
+                            process.BeginOutputReadLine();
+                        }
+                        catch (Exception)
+                        {
                         }
 
-                        if (_applicationData.Bookmarks.Select(b => b.VagrantInstance).Count(i => i.CurrentProcess != null) == 0)
-                        {
-                            _menu.StopWorkingAnimation();
-                        }
-
-                        process.Dispose();
+                        process.WaitForExit();
                     };
-                    process.Start();
-                    try
-                    {
-                        process.BeginOutputReadLine();
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    process.WaitForExit();
-                };
-                worker.RunWorkerAsync();
+                    worker.RunWorkerAsync();
+                }
             }
         }
 
@@ -263,13 +267,14 @@ namespace MikeWaltonWeb.VagrantTray.Business
 
             Action<Action> initWorker = work =>
             {
-                var worker = new BackgroundWorker();
-
-                worker.DoWork += (sender, args) =>
+                using (var worker = new BackgroundWorker())
                 {
-                    work.Invoke();
-                };
-                worker.RunWorkerAsync();
+                    worker.DoWork += (sender, args) =>
+                    {
+                        work.Invoke();
+                    };
+                    worker.RunWorkerAsync();
+                }
             };
 
             return new Dictionary<string, Action>
